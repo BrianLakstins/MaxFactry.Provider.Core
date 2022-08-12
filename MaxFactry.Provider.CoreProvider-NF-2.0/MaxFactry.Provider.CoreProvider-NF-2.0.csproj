@@ -31,7 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\_references\nuget\packages\Newtonsoft.Json.12.0.2\lib\net20\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\_nuget\Newtonsoft.Json.12.0.2\lib\net20\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -58,9 +58,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="MaxFactry.Base\DataLayer\Library\Provider\" />
   </ItemGroup>
   <ItemGroup>
@@ -76,6 +73,9 @@
       <Project>{27e6cf32-fd87-4ae5-afa2-fad5cb86ae0c}</Project>
       <Name>MaxFactry.Core-NF-2.0</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
