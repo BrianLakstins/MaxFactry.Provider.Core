@@ -1,0 +1,1 @@
+# MaxFactry.Provider.Core
