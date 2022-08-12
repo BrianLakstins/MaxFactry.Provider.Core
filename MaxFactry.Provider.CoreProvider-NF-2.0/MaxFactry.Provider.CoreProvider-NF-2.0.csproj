@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{52B25B28-7EFF-4222-9C8F-38C558E0F0E8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MaxFactry.Provider.CoreProvider_NF_2._0</RootNamespace>
+    <AssemblyName>MaxFactry.Provider.CoreProvider-NF-2.0</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;net2</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;net2</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\_references\nuget\packages\Newtonsoft.Json.12.0.2\lib\net20\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataLayer\DataModel\MaxDataSetDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxHttpClientDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxSerialPortDataModel.cs" />
+    <Compile Include="DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs" />
+    <Compile Include="DataLayer\Library\Interface\IMaxDbProviderFactoryLibraryProvider.cs" />
+    <Compile Include="DataLayer\Library\MaxDbCommandLibrary.cs" />
+    <Compile Include="DataLayer\Library\MaxDbProviderFactoryLibrary.cs" />
+    <Compile Include="DataLayer\Library\Provider\MaxDbCommandLibraryDefaultProvider.cs" />
+    <Compile Include="DataLayer\Library\Provider\MaxDbProviderFactoriesDefaultLibraryProvider.cs" />
+    <Compile Include="MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextHttpClientProvider.cs" />
+    <Compile Include="MaxFactry.Base\DataLayer\Library\MaxDataSerialPortLibrary.cs" />
+    <Compile Include="MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextADODbProvider.cs" />
+    <Compile Include="MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextMSSqlProvider.cs" />
+    <Compile Include="MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextSerialPortProvider.cs" />
+    <Compile Include="MaxFactry.Base\DataLayer\Repository\Provider\MaxStorageWriteRepositoryHttpClientProvider.cs" />
+    <Compile Include="MaxFactry.Core\Provider\MaxSecurityLibraryCoreProvider.cs" />
+    <Compile Include="MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MaxFactry.Base\DataLayer\Library\Provider\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\_sm\MaxFactry.General\MaxFactry.General-NF-2.0\MaxFactry.General-NF-2.0.csproj">
+      <Project>{7ea91872-343d-4607-84ac-956e07195d64}</Project>
+      <Name>MaxFactry.General-NF-2.0</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\_sm\MaxFactry.General\_sm\MaxFactry.Base\MaxFactry.Base-NF-2.0\MaxFactry.Base-NF-2.0.csproj">
+      <Project>{b4784207-457e-4c7c-bf95-f72a901ed032}</Project>
+      <Name>MaxFactry.Base-NF-2.0</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\_sm\MaxFactry.General\_sm\MaxFactry.Base\_sm\MaxFactry.Core\MaxFactry.Core-NF-2.0\MaxFactry.Core-NF-2.0.csproj">
+      <Project>{27e6cf32-fd87-4ae5-afa2-fad5cb86ae0c}</Project>
+      <Name>MaxFactry.Core-NF-2.0</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
