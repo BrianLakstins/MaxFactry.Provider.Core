@@ -9,6 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxFactry.Provider.CoreProv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxFactry.Provider.CoreProvider-NF-2.0", "MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Provider.CoreProvider-NF-2.0.csproj", "{52B25B28-7EFF-4222-9C8F-38C558E0F0E8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{99802D10-92CA-4D70-A546-B2F071C9D49A}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\package.bat = .nuget\package.bat
+		.nuget\MaxFactry.Provider.Core.nuspec = .nuget\MaxFactry.Provider.Core.nuspec
+		.nuget\readme.md = .nuget\readme.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

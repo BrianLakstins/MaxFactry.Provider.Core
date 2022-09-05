@@ -1,0 +1,32 @@
+﻿<?xml version="1.0"?>
+<package  xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>    
+    <id>MaxFactry.Provider.Core</id>
+    <version>1.0.1.0</version>
+    <title>MaxFactry Provider Core</title>
+    <authors>Brian Lakstins</authors>
+    <owners>brianlakstins</owners>
+    <license type="expression">MIT</license>
+    <projectUrl>https://maxfactry.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Core Provider library for use in MaxFactry Framework</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright © Brian A. Lakstins (http://www.lakstins.com/brian/)</copyright>
+    <tags></tags>
+	  <dependencies>
+		  <group targetFramework=".NETFramework2.0">
+			  <dependency id="MaxFactry.General" version="1.0.1" />
+			  <dependency id="Newtonsoft.Json" version="12.0.2" />
+		  </group>
+		  <group targetFramework=".NETFramework4.5.2">
+			  <dependency id="MaxFactry.General" version="1.0.1" />
+			  <dependency id="Newtonsoft.Json" version="12.0.2" />
+		  </group>
+	  </dependencies>
+	<summary>MaxFactry Core Provider supports the MaxFactry Framework</summary>
+  </metadata>
+  <files>
+    <file src="readme.md" target="" />
+    <file src="lib\**" target="lib/" />
+  </files>
+</package>
