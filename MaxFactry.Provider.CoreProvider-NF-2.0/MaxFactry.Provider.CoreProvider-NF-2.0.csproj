@@ -30,9 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-	<PackageReference Include="Newtonsoft.Json" Version="12.0.2">
-	</PackageReference>
-	<Reference Include="System" />
+    <PackageReference Include="MaxFactry.General">
+      <Version>1.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2">
+    </PackageReference>
+    <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
   </ItemGroup>
@@ -58,20 +61,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MaxFactry.Base\DataLayer\Library\Provider\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\_sm\MaxFactry.General\MaxFactry.General-NF-2.0\MaxFactry.General-NF-2.0.csproj">
-      <Project>{7ea91872-343d-4607-84ac-956e07195d64}</Project>
-      <Name>MaxFactry.General-NF-2.0</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\_sm\MaxFactry.General\_sm\MaxFactry.Base\MaxFactry.Base-NF-2.0\MaxFactry.Base-NF-2.0.csproj">
-      <Project>{b4784207-457e-4c7c-bf95-f72a901ed032}</Project>
-      <Name>MaxFactry.Base-NF-2.0</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\_sm\MaxFactry.General\_sm\MaxFactry.Base\_sm\MaxFactry.Core\MaxFactry.Core-NF-2.0\MaxFactry.Core-NF-2.0.csproj">
-      <Project>{27e6cf32-fd87-4ae5-afa2-fad5cb86ae0c}</Project>
-      <Name>MaxFactry.Core-NF-2.0</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -45,6 +45,7 @@ namespace MaxFactry.Core.Provider
         public override string GetAccessToken(Uri loTokenUrl, string lsClientId, string lsClientSecret, string lsScope)
         {
             string lsR = null;
+#if net4_52
             System.Net.Http.HttpClientHandler loHandler = new System.Net.Http.HttpClientHandler();
             if (loHandler.SupportsAutomaticDecompression)
             {
@@ -82,6 +83,7 @@ namespace MaxFactry.Core.Provider
             {
                 MaxLogLibrary.Log(new MaxLogEntryStructure(MaxEnumGroup.LogError, "Error getting content from {Url}", loE, loTokenUrl));
             }
+#endif
 
             return lsR;
         }
@@ -89,6 +91,7 @@ namespace MaxFactry.Core.Provider
         public override string GetAccessToken(Uri loTokenUrl, MaxIndex loCredentialIndex)
         {
             string lsR = null;
+#if net4_52
             System.Net.Http.HttpClientHandler loHandler = new System.Net.Http.HttpClientHandler();
             if (loHandler.SupportsAutomaticDecompression)
             {
@@ -123,7 +126,7 @@ namespace MaxFactry.Core.Provider
             {
                 MaxLogLibrary.Log(new MaxLogEntryStructure(MaxEnumGroup.LogError, "Error getting content from {Url}", loE, loTokenUrl));
             }
-
+#endif
 
             return lsR;
         }
