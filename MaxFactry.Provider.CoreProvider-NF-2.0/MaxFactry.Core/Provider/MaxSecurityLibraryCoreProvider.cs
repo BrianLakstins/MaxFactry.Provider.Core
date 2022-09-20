@@ -46,6 +46,7 @@ namespace MaxFactry.Core.Provider
         {
             string lsR = null;
 #if net4_52
+            System.Net.ServicePointManager.SecurityProtocol |= System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
             System.Net.Http.HttpClientHandler loHandler = new System.Net.Http.HttpClientHandler();
             if (loHandler.SupportsAutomaticDecompression)
             {
@@ -92,6 +93,7 @@ namespace MaxFactry.Core.Provider
         {
             string lsR = null;
 #if net4_52
+            System.Net.ServicePointManager.SecurityProtocol |= System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
             System.Net.Http.HttpClientHandler loHandler = new System.Net.Http.HttpClientHandler();
             if (loHandler.SupportsAutomaticDecompression)
             {
