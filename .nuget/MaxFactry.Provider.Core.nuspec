@@ -2,7 +2,7 @@
 <package  xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>    
     <id>MaxFactry.Provider.Core</id>
-    <version>1.0.1.0</version>
+    <version>1.0.3</version>
     <title>MaxFactry Provider Core</title>
     <authors>Brian Lakstins</authors>
     <owners>brianlakstins</owners>
@@ -14,13 +14,17 @@
     <copyright>Copyright © Brian A. Lakstins (http://www.lakstins.com/brian/)</copyright>
     <tags></tags>
 	  <dependencies>
-		  <group targetFramework=".NETFramework2.0">
-			  <dependency id="MaxFactry.General" version="1.0.1" />
-			  <dependency id="Newtonsoft.Json" version="12.0.2" />
+		  <group targetFramework="net20">
+			  <dependency id="MaxFactry.Core" version="1.0.*" />
+			  <dependency id="MaxFactry.Base" version="1.0.*" />
+			  <dependency id="MaxFactry.General" version="1.0.*" />
+			  <dependency id="Newtonsoft.Json" version="12.0.*" />
 		  </group>
-		  <group targetFramework=".NETFramework4.5.2">
-			  <dependency id="MaxFactry.General" version="1.0.1" />
-			  <dependency id="Newtonsoft.Json" version="12.0.2" />
+		  <group targetFramework="net452">
+			  <dependency id="MaxFactry.Core" version="1.0.*" />
+			  <dependency id="MaxFactry.Base" version="1.0.*" />
+			  <dependency id="MaxFactry.General" version="1.0.*" />
+			  <dependency id="Newtonsoft.Json" version="12.0.*" />
 		  </group>
 	  </dependencies>
 	<summary>MaxFactry Core Provider supports the MaxFactry Framework</summary>

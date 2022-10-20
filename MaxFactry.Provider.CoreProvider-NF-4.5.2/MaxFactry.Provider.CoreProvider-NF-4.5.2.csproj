@@ -36,11 +36,15 @@
     <AssemblyOriginatorKeyFile>MaxFactry.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MaxFactry.General">
-      <Version>1.0.2.2</Version>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2">
-    </PackageReference>
+    <Reference Include="MaxFactry.Base-NF-4.5.2, Version=1.0.3.0, Culture=neutral, PublicKeyToken=fbbc3eafbb4c95f8, processorArchitecture=MSIL">
+      <HintPath>..\..\_nuget\MaxFactry.Base.1.0.3\lib\net452\MaxFactry.Base-NF-4.5.2.dll</HintPath>
+    </Reference>
+    <Reference Include="MaxFactry.Core-NF-4.5.2, Version=1.0.3.0, Culture=neutral, PublicKeyToken=fbbc3eafbb4c95f8, processorArchitecture=MSIL">
+      <HintPath>..\..\_nuget\MaxFactry.Core.1.0.3\lib\net452\MaxFactry.Core-NF-4.5.2.dll</HintPath>
+    </Reference>
+    <Reference Include="MaxFactry.General-NF-4.5.2, Version=1.0.3.0, Culture=neutral, PublicKeyToken=fbbc3eafbb4c95f8, processorArchitecture=MSIL">
+      <HintPath>..\..\_nuget\MaxFactry.General.1.0.3\lib\net452\MaxFactry.General-NF-4.5.2.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
