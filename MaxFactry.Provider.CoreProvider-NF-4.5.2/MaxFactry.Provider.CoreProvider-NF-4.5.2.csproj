@@ -36,15 +36,6 @@
     <AssemblyOriginatorKeyFile>MaxFactry.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MaxFactry.Base-NF-4.5.2, Version=1.0.3.0, Culture=neutral, PublicKeyToken=fbbc3eafbb4c95f8, processorArchitecture=MSIL">
-      <HintPath>..\..\_nuget\MaxFactry.Base.1.0.3\lib\net452\MaxFactry.Base-NF-4.5.2.dll</HintPath>
-    </Reference>
-    <Reference Include="MaxFactry.Core-NF-4.5.2, Version=1.0.3.0, Culture=neutral, PublicKeyToken=fbbc3eafbb4c95f8, processorArchitecture=MSIL">
-      <HintPath>..\..\_nuget\MaxFactry.Core.1.0.3\lib\net452\MaxFactry.Core-NF-4.5.2.dll</HintPath>
-    </Reference>
-    <Reference Include="MaxFactry.General-NF-4.5.2, Version=1.0.3.0, Culture=neutral, PublicKeyToken=fbbc3eafbb4c95f8, processorArchitecture=MSIL">
-      <HintPath>..\..\_nuget\MaxFactry.General.1.0.3\lib\net452\MaxFactry.General-NF-4.5.2.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
@@ -108,10 +99,23 @@
     <None Include="MaxFactry.pfx" />
     <None Include="MaxFactry.snk" />
     <Content Include="ReadMe.md" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MaxFactry.Base\DataLayer\Library\Provider\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MaxFactry.Base">
+      <Version>1.0.4</Version>
+    </PackageReference>
+    <PackageReference Include="MaxFactry.Core">
+      <Version>1.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="MaxFactry.General">
+      <Version>1.0.4</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.3</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
