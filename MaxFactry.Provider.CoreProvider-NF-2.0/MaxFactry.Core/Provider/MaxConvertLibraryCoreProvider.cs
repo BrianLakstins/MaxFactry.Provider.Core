@@ -49,41 +49,6 @@ namespace MaxFactry.Core.Provider
     /// </summary>
     public class MaxConvertLibraryCoreProvider : MaxConvertLibraryDefaultProvider
     {
-        public override DateTime ConvertToDateTime(object loObject)
-        {
-            DateTime ldR = base.ConvertToDateTime(loObject);
-            if (DateTime.MinValue == ldR)
-            {
-                if (loObject is string)
-                {
-                    if (!DateTime.TryParse(loObject as string, out ldR))
-                    {
-                        //// Try parsing as milliseconds from 1/1/1970.
-                        bool lbIsNumber = true;
-                        foreach (char loChar in (string)loObject)
-                        {
-                            if (!char.IsNumber(loChar))
-                            {
-                                lbIsNumber = false;
-                            }
-                        }
-
-                        if (lbIsNumber)
-                        {
-                            double lnNumber = double.MinValue;
-                            if (double.TryParse((string)loObject, out lnNumber))
-                            {
-                                ldR = new DateTime(1970, 1, 1).AddMilliseconds(lnNumber);
-                                ldR = DateTime.SpecifyKind(ldR, DateTimeKind.Utc);
-                            }
-                        }
-                    }
-                }
-            }
-
-            return ldR;
-        }
-
         public override string SerializeToStringConditional(object loObject)
         {
             return this.SerializeToJsonConditional(loObject);
