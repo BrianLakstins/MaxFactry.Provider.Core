@@ -134,6 +134,10 @@ namespace MaxFactry.Core.Provider
 
                                     Type loType = Type.GetType(lsType);
                                     loValue = this.DeserializeObject(loValue.ToString(), loType);
+                                    if (loValue is DateTime)
+                                    {
+                                        loValue = DateTime.SpecifyKind((DateTime)loValue, DateTimeKind.Utc);
+                                    }
                                 }
 
                                 laIndexData[lnCurrent] = new MaxIndexItemStructure(lnCurrent, lsKey, loValue);
