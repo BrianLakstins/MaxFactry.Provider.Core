@@ -776,72 +776,75 @@ namespace MaxFactry.Base.DataLayer.Provider
         {
             this.Initialize();
             bool lbR = true;
-            string lsTableKey = this.GetHasTableKey(loDataModel, loConnection);
-            string lsHasTable = MaxCacheRepository.Get(typeof(object), "_HasTable" + lsTableKey, typeof(string)) as string;
-            if (string.IsNullOrEmpty(lsHasTable))
+            if (!loDataModel.DataStorageName.Contains("_View"))
             {
-                lock (_oLock)
+                string lsTableKey = this.GetHasTableKey(loDataModel, loConnection);
+                string lsHasTable = MaxCacheRepository.Get(typeof(object), "_HasTable" + lsTableKey, typeof(string)) as string;
+                if (string.IsNullOrEmpty(lsHasTable))
                 {
-                    lsHasTable = MaxCacheRepository.Get(typeof(object), "_HasTable" + lsTableKey, typeof(string)) as string;
-                    if (string.IsNullOrEmpty(lsHasTable))
+                    lock (_oLock)
                     {
-                        lbR = false;
-                        string lsSql = MaxSqlGenerationLibrary.GetTableExists(this.SqlProviderName, this.SqlProviderType);
-                        DbCommand loCommand = MaxDbProviderFactoryLibrary.GetCommand(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
-                        loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql);
-                        loCommand.Connection = loConnection;
-                        try
+                        lsHasTable = MaxCacheRepository.Get(typeof(object), "_HasTable" + lsTableKey, typeof(string)) as string;
+                        if (string.IsNullOrEmpty(lsHasTable))
                         {
-                            DbParameter loParameter = loCommand.CreateParameter();
-                            loParameter.ParameterName = "@TableName";
-                            loParameter.DbType = DbType.String;
-                            loParameter.Value = loDataModel.DataStorageName;
-                            loCommand.Parameters.Add(loParameter);
-                            int lnCount = Convert.ToInt16(MaxDbCommandLibrary.ExecuteScaler(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand));
-                            if (lnCount > 0)
+                            lbR = false;
+                            string lsSql = MaxSqlGenerationLibrary.GetTableExists(this.SqlProviderName, this.SqlProviderType);
+                            DbCommand loCommand = MaxDbProviderFactoryLibrary.GetCommand(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
+                            loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql);
+                            loCommand.Connection = loConnection;
+                            try
                             {
-                                lbR = true;
-                                MaxCacheRepository.Set(typeof(object), "_HasTable" + lsTableKey, "Table Found");
-                                //// Check to make sure table columns matches DataModel columns.  Add any that don't exist.
-                                string lsSqlColumnList = MaxSqlGenerationLibrary.GetColumnList(this.SqlProviderName, this.SqlProviderType, loDataModel.DataStorageName);
-                                if (!string.IsNullOrEmpty(lsSqlColumnList))
+                                DbParameter loParameter = loCommand.CreateParameter();
+                                loParameter.ParameterName = "@TableName";
+                                loParameter.DbType = DbType.String;
+                                loParameter.Value = loDataModel.DataStorageName;
+                                loCommand.Parameters.Add(loParameter);
+                                int lnCount = Convert.ToInt16(MaxDbCommandLibrary.ExecuteScaler(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand));
+                                if (lnCount > 0)
                                 {
-                                    DbCommand loCommandColumnList = MaxDbProviderFactoryLibrary.GetCommand(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
-                                    loCommandColumnList.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSqlColumnList);
-                                    loCommandColumnList.Connection = loConnection;
-                                    MaxDataList loDataList = new MaxDataList(new MaxDataModel());
-                                    int lnColumnCount = MaxDbCommandLibrary.Fill(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommandColumnList, loDataList, 0, 0);
-                                    if (lnColumnCount > 0)
+                                    lbR = true;
+                                    MaxCacheRepository.Set(typeof(object), "_HasTable" + lsTableKey, "Table Found");
+                                    //// Check to make sure table columns matches DataModel columns.  Add any that don't exist.
+                                    string lsSqlColumnList = MaxSqlGenerationLibrary.GetColumnList(this.SqlProviderName, this.SqlProviderType, loDataModel.DataStorageName);
+                                    if (!string.IsNullOrEmpty(lsSqlColumnList))
                                     {
-                                        string lsSqlAlterTable = MaxSqlGenerationLibrary.GetTableAlter(this.SqlProviderName, this.SqlProviderType, loDataModel, loDataList);
-                                        if (!string.IsNullOrEmpty(lsSqlAlterTable))
+                                        DbCommand loCommandColumnList = MaxDbProviderFactoryLibrary.GetCommand(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
+                                        loCommandColumnList.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSqlColumnList);
+                                        loCommandColumnList.Connection = loConnection;
+                                        MaxDataList loDataList = new MaxDataList(new MaxDataModel());
+                                        int lnColumnCount = MaxDbCommandLibrary.Fill(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommandColumnList, loDataList, 0, 0);
+                                        if (lnColumnCount > 0)
                                         {
-                                            DbCommand loCommandAlterTable = MaxDbProviderFactoryLibrary.GetCommand(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
-                                            loCommandAlterTable.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSqlAlterTable);
-                                            loCommandAlterTable.Connection = loConnection;
-                                            MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommandAlterTable);
+                                            string lsSqlAlterTable = MaxSqlGenerationLibrary.GetTableAlter(this.SqlProviderName, this.SqlProviderType, loDataModel, loDataList);
+                                            if (!string.IsNullOrEmpty(lsSqlAlterTable))
+                                            {
+                                                DbCommand loCommandAlterTable = MaxDbProviderFactoryLibrary.GetCommand(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
+                                                loCommandAlterTable.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSqlAlterTable);
+                                                loCommandAlterTable.Connection = loConnection;
+                                                MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommandAlterTable);
+                                            }
                                         }
                                     }
                                 }
+                                else
+                                {
+                                    this.CreateTable(loDataModel, loConnection);
+                                    lbR = true;
+                                }
                             }
-                            else
+                            catch (Exception loE)
                             {
+                                //// Can't tell if the table exists or not, so try to create it.
                                 this.CreateTable(loDataModel, loConnection);
+                                //MaxExceptionLibrary.LogException("Error checking table exists [" + loDataModel.DataStorageName + "] on connection [" + loConnection.ConnectionString + "]", loE);
                                 lbR = true;
                             }
-                        }
-                        catch (Exception loE)
-                        {
-                            //// Can't tell if the table exists or not, so try to create it.
-                            this.CreateTable(loDataModel, loConnection);
-                            //MaxExceptionLibrary.LogException("Error checking table exists [" + loDataModel.DataStorageName + "] on connection [" + loConnection.ConnectionString + "]", loE);
-                            lbR = true;
-                        }
-                        finally
-                        {
-                            loCommand.Connection = null;
-                            loCommand.Dispose();
-                            loCommand = null;
+                            finally
+                            {
+                                loCommand.Connection = null;
+                                loCommand.Dispose();
+                                loCommand = null;
+                            }
                         }
                     }
                 }
