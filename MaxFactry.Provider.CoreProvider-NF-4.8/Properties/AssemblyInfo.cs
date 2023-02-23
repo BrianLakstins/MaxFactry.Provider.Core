@@ -1,36 +1,71 @@
-﻿using System.Reflection;
+﻿// <copyright file="AssemblyInfo.cs" company="Lakstins Family, LLC">
+// Copyright (c) Brian A. Lakstins (http://www.lakstins.com/brian/)
+// </copyright>
+
+#region License
+// <license>
+// This software is provided 'as-is', without any express or implied warranty. In no 
+// event will the author be held liable for any damages arising from the use of this 
+// software.
+//  
+// Permission is granted to anyone to use this software for any purpose, including 
+// commercial applications, and to alter it and redistribute it freely, subject to the 
+// following restrictions:
+// 
+// 1. The origin of this software must not be misrepresented; you must not claim that 
+// you wrote the original software. If you use this software in a product, an 
+// acknowledgment (see the following) in the product documentation is required.
+// 
+// Portions Copyright (c) Brian A. Lakstins (http://www.lakstins.com/brian/)
+// 
+// 2. Altered source versions must be plainly marked as such, and must not be 
+// misrepresented as being the original software.
+// 
+// 3. This notice may not be removed or altered from any source distribution.
+// </license>
+#endregion
+
+#region Change Log
+// <changelog>
+// <change date="2/23/2023" author="Brian A. Lakstins" description="Initial creation">
+// </changelog>
+#endregion
+
+using System.Reflection;
+using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-// General Information about an assembly is controlled through the following
+// General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MaxFactry.Provider.CoreProvider-NF-4.8")]
-[assembly: AssemblyDescription("")]
+#if DEBUG
+[assembly: AssemblyTitle("Debug - MaxFactry Core Provider .Net 4.8")]
+[assembly: AssemblyDescription("Debug - MaxFactry Core Provider Library .Net 4.8")]
+[assembly: AssemblyProduct("Debug - MaxFactry Core Provider Library .Net 4.8")]
+#else
+[assembly: AssemblyTitle("MaxFactry Core Provider .Net 4.8")]
+[assembly: AssemblyDescription("MaxFactry Core Provider Library .Net 4.8")]
+[assembly: AssemblyProduct("MaxFactry Core Provider Library .Net 4.8")]
+#endif
+
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MaxFactry.Provider.CoreProvider-NF-4.8")]
-[assembly: AssemblyCopyright("Copyright ©  2023")]
+[assembly: AssemblyCompany("Lakstins Family, LLC (BalCoding)")]
+[assembly: AssemblyCopyright("Copyright © Brian A. Lakstins (http://www.lakstins.com/brian/)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-
-// Setting ComVisible to false makes the types in this assembly not visible
-// to COM components.  If you need to access a type in this assembly from
-// COM, set the ComVisible attribute to true on that type.
-[assembly: ComVisible(false)]
-
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("648a03fc-f775-47e3-b9c3-fb498170e0d1")]
+[assembly: NeutralResourcesLanguage("en")]
 
 // Version information for an assembly consists of the following four values:
 //
 //      Major Version
-//      Minor Version
+//      Minor Version 
 //      Build Number
 //      Revision
 //
-// You can specify all the values or you can default the Build and Revision Numbers
+// You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.7")]
+[assembly: AssemblyFileVersion("2023.02.23.01")]
+[assembly: AssemblyInformationalVersion("1.0.7")]

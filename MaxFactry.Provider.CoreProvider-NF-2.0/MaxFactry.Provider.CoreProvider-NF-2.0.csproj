@@ -54,12 +54,10 @@
     <Compile Include="MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MaxFactry.Base\DataLayer\Library\Provider\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <PackageReference Include="MaxFactry.General">
-      <Version>1.0.9</Version>
+      <Version>1.0.10</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.2</Version>
