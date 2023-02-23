@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3505AFE5-DA02-4448-B9A9-157F619D2CD2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MaxFactry.Provider.CoreProvider</RootNamespace>
+    <AssemblyName>MaxFactry.Provider.CoreProvider-NF-4.7.2</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;net2;net4_52;net4_72</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;net2;net4_52;net4_72</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\DataModel\MaxDataSetDataModel.cs">
+      <Link>DataLayer\DataModel\MaxDataSetDataModel.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\DataModel\MaxHttpClientDataModel.cs">
+      <Link>DataLayer\DataModel\MaxHttpClientDataModel.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\DataModel\MaxSerialPortDataModel.cs">
+      <Link>DataLayer\DataModel\MaxSerialPortDataModel.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs">
+      <Link>DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Interface\IMaxDbProviderFactoryLibraryProvider.cs">
+      <Link>DataLayer\Library\Interface\IMaxDbProviderFactoryLibraryProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\MaxDbCommandLibrary.cs">
+      <Link>DataLayer\Library\MaxDbCommandLibrary.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\MaxDbProviderFactoryLibrary.cs">
+      <Link>DataLayer\Library\MaxDbProviderFactoryLibrary.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDbCommandLibraryDefaultProvider.cs">
+      <Link>DataLayer\Library\Provider\MaxDbCommandLibraryDefaultProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDbProviderFactoriesDefaultLibraryProvider.cs">
+      <Link>DataLayer\Library\Provider\MaxDbProviderFactoriesDefaultLibraryProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Library\MaxDataSerialPortLibrary.cs">
+      <Link>MaxFactry.Base\DataLayer\Library\MaxDataSerialPortLibrary.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextADODbProvider.cs">
+      <Link>MaxFactry.Base\Repository\Provider\MaxDataContextADODbProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextHttpClientProvider.cs">
+      <Link>MaxFactry.Base\Repository\Provider\MaxDataContextHttpClientProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextMSSqlProvider.cs">
+      <Link>MaxFactry.Base\Repository\Provider\MaxDataContextMSSqlProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextSerialPortProvider.cs">
+      <Link>MaxFactry.Base\Repository\Provider\MaxDataContextSerialPortProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Repository\Provider\MaxStorageWriteRepositoryHttpClientProvider.cs">
+      <Link>MaxFactry.Base\Repository\Provider\MaxStorageWriteRepositoryHttpClientProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs">
+      <Link>MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Core\Provider\MaxSecurityLibraryCoreProvider.cs">
+      <Link>MaxFactry.Core\Provider\MaxSecurityLibraryCoreProvider.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="MaxFactry.pfx" />
+    <None Include="MaxFactry.snk" />
+    <Content Include="ReadMe.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MaxFactry.General">
+      <Version>1.0.10</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.2</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
