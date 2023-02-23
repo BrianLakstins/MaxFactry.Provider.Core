@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{99802D10-92CA-4D70-A546-B2F071C9D49A}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\MaxFactry.Provider.Core.nuspec = .nuget\MaxFactry.Provider.Core.nuspec
+		.nuget\nuget.config = .nuget\nuget.config
 		.nuget\package.bat = .nuget\package.bat
 		.nuget\readme.md = .nuget\readme.md
 	EndProjectSection
@@ -20,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxFactry.Provider.CoreProv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxFactry.Provider.CoreProvider-NF-4.8", "MaxFactry.Provider.CoreProvider-NF-4.8\MaxFactry.Provider.CoreProvider-NF-4.8.csproj", "{648A03FC-F775-47E3-B9C3-FB498170E0D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxFactry.Provider.CoreProvider-NC-6.0", "MaxFactry.Provider.CoreProvider-NC-6.0\MaxFactry.Provider.CoreProvider-NC-6.0.csproj", "{E6BEC093-ED80-4B9F-941B-B1F9D60B3467}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaxFactry.Provider.CoreProvider-NC-6.0", "MaxFactry.Provider.CoreProvider-NC-6.0\MaxFactry.Provider.CoreProvider-NC-6.0.csproj", "{E6BEC093-ED80-4B9F-941B-B1F9D60B3467}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxFactry.Provider.CoreProvider-NC-3.1", "MaxFactry.Provider.CoreProvider-NC-3.1\MaxFactry.Provider.CoreProvider-NC-3.1.csproj", "{3EF33C47-6412-4889-A3A0-51D1ACB27197}"
 EndProject
