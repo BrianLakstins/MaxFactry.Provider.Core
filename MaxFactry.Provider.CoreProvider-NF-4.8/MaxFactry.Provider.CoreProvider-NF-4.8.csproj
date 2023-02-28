@@ -92,13 +92,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="MaxFactry.pfx" />
     <None Include="MaxFactry.snk" />
     <Content Include="ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MaxFactry.General">
-      <Version>1.0.10</Version>
+      <Version>1.0.12</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.2</Version>
