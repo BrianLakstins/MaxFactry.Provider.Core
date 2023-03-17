@@ -70,14 +70,14 @@ namespace MaxFactry.Core.Provider
                     System.Threading.Thread.Sleep(100);
                 }
                 System.Net.Http.HttpResponseMessage loHttpClientResponse = loTask.Result;
+                string lsResult = loHttpClientResponse.Content.ReadAsStringAsync().Result;
                 if (loHttpClientResponse.IsSuccessStatusCode)
                 {
-                    MaxFactry.General.BusinessLayer.MaxUserAuthTokenEntity loTokenEntity = MaxFactry.General.BusinessLayer.MaxUserAuthTokenEntity.Create();
-                    lsR = loHttpClientResponse.Content.ReadAsStringAsync().Result;
+                    lsR = lsResult;
                 }
                 else
                 {
-                    throw new MaxException("Post call to " + loTokenUrl.ToString() + " failed with response " + loHttpClientResponse.StatusCode.ToString());
+                    throw new MaxException("Post call to " + loTokenUrl.ToString() + " failed with response code " + loHttpClientResponse.StatusCode.ToString() + " and response " + lsResult);
                 }
             }
             catch (Exception loE)
@@ -114,14 +114,15 @@ namespace MaxFactry.Core.Provider
                     System.Threading.Thread.Sleep(100);
                 }
                 System.Net.Http.HttpResponseMessage loHttpClientResponse = loTask.Result;
+                string lsResult = loHttpClientResponse.Content.ReadAsStringAsync().Result;
                 if (loHttpClientResponse.IsSuccessStatusCode)
                 {
                     MaxFactry.General.BusinessLayer.MaxUserAuthTokenEntity loTokenEntity = MaxFactry.General.BusinessLayer.MaxUserAuthTokenEntity.Create();
-                    lsR = loHttpClientResponse.Content.ReadAsStringAsync().Result;
+                    lsR = lsResult;
                 }
                 else
                 {
-                    throw new MaxException("Post call to " + loTokenUrl.ToString() + " failed with response " + loHttpClientResponse.StatusCode.ToString());
+                    throw new MaxException("Post call to " + loTokenUrl.ToString() + " failed with response " + loHttpClientResponse.StatusCode.ToString() + " and response " + lsResult);
                 }
             }
             catch (Exception loE)
