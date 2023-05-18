@@ -431,7 +431,7 @@ namespace MaxFactry.Base.DataLayer.Provider
             MaxDataModel loDataModel = new MaxDataModel(lsDataStorageName);
             MaxDataList loR = new MaxDataList(loDataModel);
             DbConnection loConnection = MaxDbProviderFactoryLibrary.GetConnection(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
-            if (this.HasTable(loDataModel, loConnection))
+            if (this.IsTableFound(loDataModel, loConnection))
             {
                 string lsSql = MaxSqlGenerationLibrary.GetSelect(this.SqlProviderName, this.SqlProviderType, lsDataStorageName, laFields);
                 MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "Select [" + lsDataStorageName + "] sql [" + lsSql + "]", "MaxDataContextADODbProvider");
@@ -477,7 +477,7 @@ namespace MaxFactry.Base.DataLayer.Provider
 			MaxDataList loR = new MaxDataList(loData.DataModel);
 			lnTotal = 0;
             DbConnection loConnection = MaxDbProviderFactoryLibrary.GetConnection(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
-            if (this.HasTable(loData.DataModel, loConnection))
+            if (this.IsTableFound(loData.DataModel, loConnection))
 			{
                 string lsStorageKey = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loData.DataModel.StorageKey));
                 loData.Set(loData.DataModel.StorageKey, lsStorageKey);
@@ -553,7 +553,7 @@ namespace MaxFactry.Base.DataLayer.Provider
 		{
 			int lnR = 0;
             DbConnection loConnection = MaxDbProviderFactoryLibrary.GetConnection(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
-            if (this.HasTable(loData.DataModel, loConnection))
+            if (this.IsTableFound(loData.DataModel, loConnection))
 			{
                 string lsStorageKey = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loData.DataModel.StorageKey));
                 loData.Set(loData.DataModel.StorageKey, lsStorageKey);
@@ -775,16 +775,34 @@ namespace MaxFactry.Base.DataLayer.Provider
         protected virtual bool HasTable(MaxDataModel loDataModel, DbConnection loConnection)
         {
             this.Initialize();
+            bool lbR = this.IsTableFound(loDataModel, loConnection);
+            if (!lbR)
+            {
+                this.CreateTable(loDataModel, loConnection);
+                lbR = true;
+            }
+
+            return lbR;
+        }
+
+        /// <summary>
+        /// Checks to see if a table exists in the database.
+        /// </summary>
+        /// <param name="lsTableName">name of the table.</param>
+        /// <returns>true if exists now, or was found to exist on a previous call.</returns>
+        protected virtual bool IsTableFound(MaxDataModel loDataModel, DbConnection loConnection)
+        {
+            this.Initialize();
             bool lbR = true;
             if (!loDataModel.DataStorageName.Contains("_View"))
             {
                 string lsTableKey = this.GetHasTableKey(loDataModel, loConnection);
-                string lsHasTable = MaxCacheRepository.Get(typeof(object), "_HasTable" + lsTableKey, typeof(string)) as string;
+                string lsHasTable = MaxCacheRepository.Get(typeof(object), "_IsTableFound" + lsTableKey, typeof(string)) as string;
                 if (string.IsNullOrEmpty(lsHasTable))
                 {
                     lock (_oLock)
                     {
-                        lsHasTable = MaxCacheRepository.Get(typeof(object), "_HasTable" + lsTableKey, typeof(string)) as string;
+                        lsHasTable = MaxCacheRepository.Get(typeof(object), "_IsTableFound" + lsTableKey, typeof(string)) as string;
                         if (string.IsNullOrEmpty(lsHasTable))
                         {
                             lbR = false;
@@ -803,7 +821,7 @@ namespace MaxFactry.Base.DataLayer.Provider
                                 if (lnCount > 0)
                                 {
                                     lbR = true;
-                                    MaxCacheRepository.Set(typeof(object), "_HasTable" + lsTableKey, "Table Found");
+                                    MaxCacheRepository.Set(typeof(object), "_IsTableFound" + lsTableKey, "Table Found");
                                     //// Check to make sure table columns matches DataModel columns.  Add any that don't exist.
                                     string lsSqlColumnList = MaxSqlGenerationLibrary.GetColumnList(this.SqlProviderName, this.SqlProviderType, loDataModel.DataStorageName);
                                     if (!string.IsNullOrEmpty(lsSqlColumnList))
@@ -826,18 +844,14 @@ namespace MaxFactry.Base.DataLayer.Provider
                                         }
                                     }
                                 }
-                                else
-                                {
-                                    this.CreateTable(loDataModel, loConnection);
-                                    lbR = true;
-                                }
                             }
                             catch (Exception loE)
                             {
-                                //// Can't tell if the table exists or not, so try to create it.
-                                this.CreateTable(loDataModel, loConnection);
-                                //MaxExceptionLibrary.LogException("Error checking table exists [" + loDataModel.DataStorageName + "] on connection [" + loConnection.ConnectionString + "]", loE);
-                                lbR = true;
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "IsTableFound", MaxEnumGroup.LogError, "Exception checking table exists for {DataStorageName} using ConnectionString {ConnectionString}", loE, loDataModel.DataStorageName, loConnection.ConnectionString));
+                                if (this.CreateTable(loDataModel, loConnection))
+                                {
+                                    lbR = true;
+                                }
                             }
                             finally
                             {
@@ -899,34 +913,47 @@ namespace MaxFactry.Base.DataLayer.Provider
 		/// Creates a table in the database (checks to make sure it does not already exist).
 		/// </summary>
 		/// <param name="loDataModel">Definition of table to be created.</param>
-        protected virtual void CreateTable(MaxDataModel loDataModel, DbConnection loConnection)
+        protected virtual bool CreateTable(MaxDataModel loDataModel, DbConnection loConnection)
 		{
+            bool lbR = false;
             string lsTableKey = this.GetHasTableKey(loDataModel, loConnection);
             DbCommand loCommand = MaxDbProviderFactoryLibrary.GetCommand(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
-            string lsHasTable = MaxCacheRepository.Get(typeof(object), "_HasTable" + lsTableKey, typeof(string)) as string;
+            string lsHasTable = MaxCacheRepository.Get(typeof(object), "_IsTableFound" + lsTableKey, typeof(string)) as string;
             if (string.IsNullOrEmpty(lsHasTable))
             {
-                try
+                lock (_oLock)
                 {
-                    string lsSql = MaxSqlGenerationLibrary.GetTableCreate(this.SqlProviderName, this.SqlProviderType, loDataModel);
-                    loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql);
-                    loCommand.Connection = loConnection;
-                    MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
-                    MaxCacheRepository.Set(typeof(object), "_HasTable" + lsTableKey, "Table Created");
-                }
-                catch (Exception loE)
-                {
-                    //// Assume it exists, but we cannot tell.
-                    //// Errors will occur when the table is accessed.
-                    MaxCacheRepository.Set(typeof(object), "_HasTable" + lsTableKey, "Table creation failed");
-                    //MaxExceptionLibrary.LogException("Error creating table [" + loDataModel.DataStorageName + "] on connection [" + loConnection.ConnectionString + "]", loE);
-                }
-                finally
-                {
-                    loCommand.Dispose();
-                    loCommand = null;
+                    //// Assume the table will exist after this, or that we won't be able to tell so need to assume it exists
+                    lbR = true;
+                    lsHasTable = MaxCacheRepository.Get(typeof(object), "_IsTableFound" + lsTableKey, typeof(string)) as string;
+                    if (string.IsNullOrEmpty(lsHasTable))
+                    {
+                        try
+                        {
+                            string lsSql = MaxSqlGenerationLibrary.GetTableCreate(this.SqlProviderName, this.SqlProviderType, loDataModel);
+                            loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql);
+                            loCommand.Connection = loConnection;
+                            MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
+                            MaxCacheRepository.Set(typeof(object), "_IsTableFound" + lsTableKey, "Table Created");
+                        }
+                        catch (Exception loE)
+                        {
+                            //// Assume it exists, but we cannot tell.
+                            //// Errors will occur when the table is accessed.
+                            MaxCacheRepository.Set(typeof(object), "_IsTableFound" + lsTableKey, "Table creation failed");
+                            MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "CreateTable", MaxEnumGroup.LogError, "Exception creating table for {DataStorageName} using ConnectionString {ConnectionString}", loE, loDataModel.DataStorageName, loConnection.ConnectionString));
+                            //MaxExceptionLibrary.LogException("Error creating table [" + loDataModel.DataStorageName + "] on connection [" + loConnection.ConnectionString + "]", loE);
+                        }
+                        finally
+                        {
+                            loCommand.Dispose();
+                            loCommand = null;
+                        }
+                    }
                 }
             }
+
+            return lbR;
 		}
 
         protected string GetHasTableKey(MaxDataModel loDataModel, DbConnection loConnection)

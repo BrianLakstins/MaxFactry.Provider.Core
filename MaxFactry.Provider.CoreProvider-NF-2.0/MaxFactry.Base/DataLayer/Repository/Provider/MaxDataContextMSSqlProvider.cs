@@ -74,7 +74,7 @@ namespace MaxFactry.Base.DataLayer.Provider
             MaxDataList loR = new MaxDataList(loData.DataModel);
             lnTotal = 0;
             DbConnection loConnection = MaxDbProviderFactoryLibrary.GetConnection(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
-            if (this.HasTable(loData.DataModel, loConnection))
+            if (this.IsTableFound(loData.DataModel, loConnection))
             {
                 string lsStorageKey = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loData.DataModel.StorageKey));
                 loData.Set(loData.DataModel.StorageKey, lsStorageKey);
