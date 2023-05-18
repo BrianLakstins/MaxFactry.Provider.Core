@@ -5,9 +5,9 @@
     <RootNamespace>MaxFactry.Provider.CoreProvider_NC_6._0</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
 	  <Nullable>enable</Nullable>
-	  <Version>1.0.20</Version>
-	  <AssemblyVersion>1.0.20</AssemblyVersion>
-	  <FileVersion>2023.05.01.01</FileVersion>
+	  <Version>1.0.20.1</Version>
+	  <AssemblyVersion>1.0.20.1</AssemblyVersion>
+	  <FileVersion>2023.05.18.01</FileVersion>
 	  <SignAssembly>True</SignAssembly>
 	  <AssemblyOriginatorKeyFile>MaxFactry.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
