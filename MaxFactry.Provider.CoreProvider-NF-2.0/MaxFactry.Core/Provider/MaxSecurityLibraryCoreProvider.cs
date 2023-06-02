@@ -34,9 +34,6 @@
 namespace MaxFactry.Core.Provider
 {
     using System;
-    using System.Threading.Tasks;
-    using MaxFactry.Base.BusinessLayer;
-    using MaxFactry.General.BusinessLayer;
 
     /// <summary>
     /// Defines a class for implementing the MaxSecurityLibrary functionality
