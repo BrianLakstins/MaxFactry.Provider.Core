@@ -34,6 +34,7 @@
 namespace MaxFactry.Core.Provider
 {
     using System;
+    using System.Threading.Tasks;
     using MaxFactry.Base.BusinessLayer;
     using MaxFactry.General.BusinessLayer;
 
@@ -42,6 +43,14 @@ namespace MaxFactry.Core.Provider
     /// </summary>
     public class MaxSecurityLibraryCoreProvider : MaxSecurityLibraryDefaultProvider
     {
+        /// <summary>
+        /// Uses client_id and client_secret as basic authentication and includes grant_type and scope in body as formurlencoded data
+        /// </summary>
+        /// <param name="loTokenUrl"></param>
+        /// <param name="lsClientId"></param>
+        /// <param name="lsClientSecret"></param>
+        /// <param name="lsScope"></param>
+        /// <returns></returns>
         public override string GetAccessToken(Uri loTokenUrl, string lsClientId, string lsClientSecret, string lsScope)
         {
             string lsR = null;
@@ -69,6 +78,7 @@ namespace MaxFactry.Core.Provider
                 {
                     System.Threading.Thread.Sleep(100);
                 }
+
                 System.Net.Http.HttpResponseMessage loHttpClientResponse = loTask.Result;
                 string lsResult = loHttpClientResponse.Content.ReadAsStringAsync().Result;
                 if (loHttpClientResponse.IsSuccessStatusCode)
@@ -89,6 +99,12 @@ namespace MaxFactry.Core.Provider
             return lsR;
         }
 
+        /// <summary>
+        /// Includes all credential information in the body as formurlencoded data
+        /// </summary>
+        /// <param name="loTokenUrl"></param>
+        /// <param name="loCredentialIndex"></param>
+        /// <returns></returns>
         public override string GetAccessToken(Uri loTokenUrl, MaxIndex loCredentialIndex)
         {
             string lsR = null;
@@ -104,8 +120,18 @@ namespace MaxFactry.Core.Provider
             System.Net.Http.Headers.CacheControlHeaderValue loCache = new System.Net.Http.Headers.CacheControlHeaderValue();
             loCache.NoCache = true;
             loClient.DefaultRequestHeaders.CacheControl = loCache;
-            string lsJson = MaxConvertLibrary.SerializeObjectToString(loCredentialIndex);
-            System.Net.Http.HttpContent loContent = new System.Net.Http.StringContent(lsJson, System.Text.Encoding.UTF8, "application/json");
+            System.Collections.Generic.Dictionary<string, string> loAuth = new System.Collections.Generic.Dictionary<string, string>();
+            string[] laKey = loCredentialIndex.GetSortedKeyList();
+            foreach (string lsKey in laKey)
+            {
+                loAuth.Add(lsKey, loCredentialIndex.GetValueString(lsKey));
+            }
+
+            System.Net.Http.HttpContent loContent = new System.Net.Http.FormUrlEncodedContent(loAuth);
+
+            //// Orginally used Json, but encoding using FormURL method seems to be more accepted
+            //string lsJson = MaxConvertLibrary.SerializeObjectToString(loCredentialIndex);
+            //System.Net.Http.HttpContent loContent = new System.Net.Http.StringContent(lsJson, System.Text.Encoding.UTF8, "application/json");
             try
             {
                 System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage> loTask = loClient.PostAsync(loTokenUrl, loContent);
@@ -113,16 +139,22 @@ namespace MaxFactry.Core.Provider
                 {
                     System.Threading.Thread.Sleep(100);
                 }
+
                 System.Net.Http.HttpResponseMessage loHttpClientResponse = loTask.Result;
-                string lsResult = loHttpClientResponse.Content.ReadAsStringAsync().Result;
                 if (loHttpClientResponse.IsSuccessStatusCode)
                 {
-                    MaxFactry.General.BusinessLayer.MaxUserAuthTokenEntity loTokenEntity = MaxFactry.General.BusinessLayer.MaxUserAuthTokenEntity.Create();
+                    System.Threading.Tasks.Task<string> loTaskResult = loHttpClientResponse.Content.ReadAsStringAsync();
+                    while (!loTask.IsCompleted)
+                    {
+                        System.Threading.Thread.Sleep(10);
+                    }
+
+                    string lsResult = loTaskResult.Result;
                     lsR = lsResult;
                 }
                 else
                 {
-                    throw new MaxException("Post call to " + loTokenUrl.ToString() + " failed with response " + loHttpClientResponse.StatusCode.ToString() + " and response " + lsResult);
+                    throw new MaxException("Post call to " + loTokenUrl.ToString() + " failed with response " + loHttpClientResponse.StatusCode.ToString() + " and reason " + loHttpClientResponse.ReasonPhrase);
                 }
             }
             catch (Exception loE)

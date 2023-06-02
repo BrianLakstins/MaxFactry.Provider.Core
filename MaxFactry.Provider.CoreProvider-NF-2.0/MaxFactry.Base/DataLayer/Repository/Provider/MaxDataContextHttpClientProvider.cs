@@ -265,13 +265,24 @@ namespace MaxFactry.Base.DataLayer.Provider
                 }
 
                 System.Net.Http.HttpResponseMessage loHttpClientResponse = null;
-                string lsContent = string.Empty;
+                object loResponseContent = null;
                 if (null != loContent)
                 {
                     loHttpClientResponse = HttpClient.PostAsync(new Uri(lsRequestUrl), loContent).Result;
                     if (loHttpClientResponse.IsSuccessStatusCode)
                     {
-                        lsContent = loHttpClientResponse.Content.ReadAsStringAsync().Result;
+                        if (loHttpClientResponse.Content != null)
+                        {
+                            if (loHttpClientResponse.Content.GetType() == typeof(System.Net.Http.StreamContent)) 
+                            {
+                                loResponseContent = loHttpClientResponse.Content.ReadAsStreamAsync().Result;
+                            }
+                            else if (loHttpClientResponse.Content.GetType() == typeof(string))
+                            {
+                                loResponseContent = loHttpClientResponse.Content.ReadAsStringAsync().Result;
+
+                            }
+                        }
                     }
                     else
                     {
@@ -283,7 +294,17 @@ namespace MaxFactry.Base.DataLayer.Provider
                     loHttpClientResponse = HttpClient.GetAsync(new Uri(lsRequestUrl)).Result;
                     if (loHttpClientResponse.IsSuccessStatusCode)
                     {
-                        lsContent = loHttpClientResponse.Content.ReadAsStringAsync().Result;
+                        if (loHttpClientResponse.Content != null)
+                        {
+                            if (loHttpClientResponse.Content.GetType() == typeof(System.Net.Http.StreamContent))
+                            {
+                                loResponseContent = loHttpClientResponse.Content.ReadAsStreamAsync().Result;
+                            }
+                            else if (loHttpClientResponse.Content.GetType() == typeof(string))
+                            {
+                                loResponseContent = loHttpClientResponse.Content.ReadAsStringAsync().Result;
+                            }
+                        }
                     }
                     else
                     {
@@ -301,7 +322,7 @@ namespace MaxFactry.Base.DataLayer.Provider
                 loDataReturn.Set(loDataModel.RequestTime, ldRequestStart);
                 loDataReturn.Set(loDataModel.ResponseTime, ldResponseEnd);
                 loDataReturn.Set(loDataModel.Response, MaxConvertLibrary.SerializeObjectToString(loResponse));
-                loDataReturn.Set(loDataModel.ResponseRaw, lsContent);
+                loDataReturn.Set(loDataModel.ResponseRaw, loResponseContent);
                 loDataReturn.Set(loDataModel.Log, MaxConvertLibrary.SerializeObjectToString(this._oLog));
                 loDataReturn.Set(loDataModel.RequestUrl, lsRequestUrl);
                 loDataReturn.Set(loDataModel.RequestContent, loContent);
