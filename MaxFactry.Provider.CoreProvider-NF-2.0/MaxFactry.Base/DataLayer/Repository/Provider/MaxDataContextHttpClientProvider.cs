@@ -190,6 +190,30 @@ namespace MaxFactry.Base.DataLayer.Provider
 
 #if net4_52 
 
+        protected static System.Net.Http.HttpClient GetMaxClient()
+        {
+            System.Net.Http.HttpClient loR = null;
+            System.Net.ServicePointManager.SecurityProtocol |= System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
+            System.Net.Http.HttpClientHandler loHandler = new System.Net.Http.HttpClientHandler();
+            if (loHandler.SupportsAutomaticDecompression)
+            {
+                loHandler.AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate;
+            }
+
+            loHandler.CookieContainer = new System.Net.CookieContainer();
+            loR = new System.Net.Http.HttpClient(loHandler);
+            loR.Timeout = new TimeSpan(0, 0, 10);
+            //_oHttpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla /5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.70 Safari/537.36");
+            loR.DefaultRequestHeaders.Add("User-Agent", "Mozilla /5.0 (MaxFactry .NET Framework)");
+            loR.DefaultRequestHeaders.Add("DNT", "1");
+            //_oHttpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3");
+            loR.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
+            loR.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+            //_oHttpClient.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.9");
+            return loR;
+        }
+
         private static System.Net.Http.HttpClient _oHttpClient = null;
 
         protected static System.Net.Http.HttpClient HttpClient
@@ -202,18 +226,7 @@ namespace MaxFactry.Base.DataLayer.Provider
                     {
                         if (null == _oHttpClient)
                         {
-                            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Ssl3 | System.Net.SecurityProtocolType.Tls | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
-                            System.Net.Http.HttpClientHandler loHandler = new System.Net.Http.HttpClientHandler();
-                            loHandler.CookieContainer = new System.Net.CookieContainer();
-                            loHandler.AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate;
-                            _oHttpClient = new System.Net.Http.HttpClient(loHandler);
-                            _oHttpClient.Timeout = new TimeSpan(0, 0, 10);
-                            //_oHttpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla /5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.70 Safari/537.36");
-                            _oHttpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla /5.0 (MaxFactry .NET Framework)");
-                            _oHttpClient.DefaultRequestHeaders.Add("DNT", "1");
-                            //_oHttpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3");
-                            _oHttpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
-                            //_oHttpClient.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.9");
+                            _oHttpClient = GetMaxClient();
                         }
                     }
                 }
@@ -245,11 +258,21 @@ namespace MaxFactry.Base.DataLayer.Provider
             MaxData loDataReturn = new MaxData(loData.DataModel);
             lnTotal = 0;
             DateTime ldRequestStart = DateTime.UtcNow;
-            string lsRequestUrl = loData.Get(loDataModel.RequestUrl) as string;
+            Uri loReqestUrl = loData.Get(loDataModel.RequestUrl) as Uri;
+            if (null == loReqestUrl)
+            {
+                string lsRequestUrl = loData.Get(loDataModel.RequestUrl) as string;
+                if (null != lsRequestUrl)
+                {
+                    loReqestUrl = new Uri(lsRequestUrl);
+                }
+            }
+            
             object loRequestContent = loData.Get(loDataModel.RequestContent);
             MaxIndex loResponse = new MaxIndex();
             try
             {
+                System.Net.Http.HttpClient loClient = HttpClient;
                 System.Net.Http.HttpContent loContent = null;
                 if (loRequestContent is System.Net.Http.HttpContent)
                 {
@@ -259,6 +282,55 @@ namespace MaxFactry.Base.DataLayer.Provider
                 {
                     loContent = new System.Net.Http.StringContent((string)loRequestContent);
                 }
+                else if (loRequestContent is MaxIndex)
+                {
+                    System.Collections.Generic.Dictionary<string, string> loContentDictionary = new System.Collections.Generic.Dictionary<string, string>();
+                    string[] laKey = ((MaxIndex)loRequestContent).GetSortedKeyList();
+                    string lsClientId = string.Empty;
+                    string lsClientSecret = string.Empty;
+                    string lsToken = string.Empty;
+                    foreach (string lsKey in laKey)
+                    {
+                        if (lsKey == "BasicAuthClientId")
+                        {
+                            lsClientId = ((MaxIndex)loRequestContent).GetValueString(lsKey);
+                        }
+                        else if (lsKey == "BasicAuthClientSecret")
+                        {
+                            lsClientSecret = ((MaxIndex)loRequestContent).GetValueString(lsKey);
+                        }
+                        else if (lsKey == "BearerAuthToken")
+                        {
+                            lsToken = ((MaxIndex)loRequestContent).GetValueString(lsKey);
+                        }
+                        else
+                        {
+                            loContentDictionary.Add(lsKey, ((MaxIndex)loRequestContent).GetValueString(lsKey));
+                        }
+                    }
+
+                    if (loContentDictionary.Count > 0)
+                    {
+                        loContent = new System.Net.Http.FormUrlEncodedContent(loContentDictionary);
+                    }
+
+                    if ((!string.IsNullOrEmpty(lsClientId) && !string.IsNullOrEmpty(lsClientSecret)) || !string.IsNullOrEmpty(lsToken))
+                    {
+                        loClient = GetMaxClient();
+                        if (!string.IsNullOrEmpty(lsClientId) && !string.IsNullOrEmpty(lsClientSecret))
+                        {
+                            loClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(string.Format("{0}:{1}", lsClientId, lsClientSecret))));
+                        }
+                        else if (!string.IsNullOrEmpty(lsToken))
+                        {
+                            loClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", lsToken);
+                        }
+
+                        System.Net.Http.Headers.CacheControlHeaderValue loCache = new System.Net.Http.Headers.CacheControlHeaderValue();
+                        loCache.NoCache = true;
+                        loClient.DefaultRequestHeaders.CacheControl = loCache;
+                    }
+                }
                 else if (null != loRequestContent)
                 {
                     loContent = new System.Net.Http.StringContent(MaxConvertLibrary.SerializeObjectToString(loRequestContent));
@@ -266,50 +338,76 @@ namespace MaxFactry.Base.DataLayer.Provider
 
                 System.Net.Http.HttpResponseMessage loHttpClientResponse = null;
                 object loResponseContent = null;
+                System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage> loTask = null;
                 if (null != loContent)
                 {
-                    loHttpClientResponse = HttpClient.PostAsync(new Uri(lsRequestUrl), loContent).Result;
+                    loTask = loClient.PostAsync(loReqestUrl, loContent);
+                }
+                else
+                {
+                    loTask = loClient.GetAsync(loReqestUrl);
+                }
+
+                while (!loTask.IsCompleted)
+                {
+                    System.Threading.Thread.Sleep(10);
+                }
+
+                if (loTask.Status == System.Threading.Tasks.TaskStatus.RanToCompletion)
+                {
+                    loHttpClientResponse = loTask.Result;
                     if (loHttpClientResponse.IsSuccessStatusCode)
                     {
                         if (loHttpClientResponse.Content != null)
                         {
-                            if (loHttpClientResponse.Content.GetType() == typeof(System.Net.Http.StreamContent)) 
+                            System.Threading.Tasks.Task loContentTask = null;
+                            if (loHttpClientResponse.Content.GetType() == typeof(System.Net.Http.StreamContent))
                             {
-                                loResponseContent = loHttpClientResponse.Content.ReadAsStreamAsync().Result;
+                                loContentTask = loHttpClientResponse.Content.ReadAsStreamAsync();
                             }
                             else if (loHttpClientResponse.Content.GetType() == typeof(string))
                             {
-                                loResponseContent = loHttpClientResponse.Content.ReadAsStringAsync().Result;
+                                loContentTask = loHttpClientResponse.Content.ReadAsStringAsync();
+                            }
+                            else if (loHttpClientResponse.Content.GetType() == typeof(byte[]))
+                            {
+                                loContentTask = loHttpClientResponse.Content.ReadAsByteArrayAsync();
+                            }
 
+                            while (!loContentTask.IsCompleted)
+                            {
+                                System.Threading.Thread.Sleep(10);
+                            }
+
+                            if (loContentTask.Status == System.Threading.Tasks.TaskStatus.RanToCompletion)
+                            {
+                                if (loContentTask is System.Threading.Tasks.Task<Stream>)
+                                {
+                                    loResponseContent = ((System.Threading.Tasks.Task<Stream>)loContentTask).Result;
+                                }
+                                else if (loContentTask is System.Threading.Tasks.Task<string>)
+                                {
+                                    loResponseContent = ((System.Threading.Tasks.Task<string>)loContentTask).Result;
+                                }
+                                else if (loContentTask is System.Threading.Tasks.Task<byte[]>)
+                                {
+                                    loResponseContent = ((System.Threading.Tasks.Task<byte[]>)loContentTask).Result;
+                                }
+                            }
+                            else
+                            {
+                                throw new MaxException("Read content task to " + loReqestUrl + " completed with status " + loTask.Status.ToString());
                             }
                         }
                     }
                     else
                     {
-                        throw new MaxException("Post call to " + lsRequestUrl + " failed with response " + loHttpClientResponse.StatusCode.ToString());
+                        throw new MaxException("Post call to " + loReqestUrl + " failed with response " + loHttpClientResponse.StatusCode.ToString());
                     }
                 }
                 else
                 {
-                    loHttpClientResponse = HttpClient.GetAsync(new Uri(lsRequestUrl)).Result;
-                    if (loHttpClientResponse.IsSuccessStatusCode)
-                    {
-                        if (loHttpClientResponse.Content != null)
-                        {
-                            if (loHttpClientResponse.Content.GetType() == typeof(System.Net.Http.StreamContent))
-                            {
-                                loResponseContent = loHttpClientResponse.Content.ReadAsStreamAsync().Result;
-                            }
-                            else if (loHttpClientResponse.Content.GetType() == typeof(string))
-                            {
-                                loResponseContent = loHttpClientResponse.Content.ReadAsStringAsync().Result;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        throw new MaxException("Get call to " + lsRequestUrl + " failed with response " + loHttpClientResponse.StatusCode.ToString());
-                    }
+                    throw new MaxException("Task to " + loReqestUrl + " completed with status " + loTask.Status.ToString());
                 }
 
                 DateTime ldResponseEnd = DateTime.UtcNow;
@@ -324,7 +422,7 @@ namespace MaxFactry.Base.DataLayer.Provider
                 loDataReturn.Set(loDataModel.Response, MaxConvertLibrary.SerializeObjectToString(loResponse));
                 loDataReturn.Set(loDataModel.ResponseRaw, loResponseContent);
                 loDataReturn.Set(loDataModel.Log, MaxConvertLibrary.SerializeObjectToString(this._oLog));
-                loDataReturn.Set(loDataModel.RequestUrl, lsRequestUrl);
+                loDataReturn.Set(loDataModel.RequestUrl, loReqestUrl);
                 loDataReturn.Set(loDataModel.RequestContent, loContent);
             }
             catch (Exception loE)
