@@ -289,6 +289,7 @@ namespace MaxFactry.Base.DataLayer.Provider
                     string lsClientId = string.Empty;
                     string lsClientSecret = string.Empty;
                     string lsToken = string.Empty;
+                    bool lbStringContent = false;
                     foreach (string lsKey in laKey)
                     {
                         if (lsKey == "BasicAuthClientId")
@@ -303,6 +304,10 @@ namespace MaxFactry.Base.DataLayer.Provider
                         {
                             lsToken = ((MaxIndex)loRequestContent).GetValueString(lsKey);
                         }
+                        else if (lsKey == "StringContent")
+                        {
+                            lbStringContent = MaxConvertLibrary.ConvertToBoolean(typeof(object), ((MaxIndex)loRequestContent)[lsKey]);
+                        }
                         else
                         {
                             loContentDictionary.Add(lsKey, ((MaxIndex)loRequestContent).GetValueString(lsKey));
@@ -311,7 +316,14 @@ namespace MaxFactry.Base.DataLayer.Provider
 
                     if (loContentDictionary.Count > 0)
                     {
-                        loContent = new System.Net.Http.FormUrlEncodedContent(loContentDictionary);
+                        if (lbStringContent)
+                        {
+                            loContent = new System.Net.Http.StringContent(MaxConvertLibrary.SerializeObjectToString(loContentDictionary));
+                        }
+                        else
+                        {
+                            loContent = new System.Net.Http.FormUrlEncodedContent(loContentDictionary);
+                        }
                     }
 
                     if ((!string.IsNullOrEmpty(lsClientId) && !string.IsNullOrEmpty(lsClientSecret)) || !string.IsNullOrEmpty(lsToken))
