@@ -331,7 +331,8 @@ namespace MaxFactry.Base.DataLayer.Provider
                         loClient = GetMaxClient();
                         if (!string.IsNullOrEmpty(lsClientId) && !string.IsNullOrEmpty(lsClientSecret))
                         {
-                            loClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(string.Format("{0}:{1}", lsClientId, lsClientSecret))));
+                            string lsAuth = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(string.Format("{0}:{1}", lsClientId, lsClientSecret)));
+                            loClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", lsAuth); ;
                         }
                         else if (!string.IsNullOrEmpty(lsToken))
                         {
@@ -368,53 +369,47 @@ namespace MaxFactry.Base.DataLayer.Provider
                 if (loTask.Status == System.Threading.Tasks.TaskStatus.RanToCompletion)
                 {
                     loHttpClientResponse = loTask.Result;
-                    if (loHttpClientResponse.IsSuccessStatusCode)
+
+                    if (loHttpClientResponse.Content != null)
                     {
-                        if (loHttpClientResponse.Content != null)
+                        System.Threading.Tasks.Task loContentTask = null;
+                        if (loHttpClientResponse.Content.GetType() == typeof(System.Net.Http.StreamContent))
                         {
-                            System.Threading.Tasks.Task loContentTask = null;
-                            if (loHttpClientResponse.Content.GetType() == typeof(System.Net.Http.StreamContent))
-                            {
-                                loContentTask = loHttpClientResponse.Content.ReadAsStreamAsync();
-                            }
-                            else if (loHttpClientResponse.Content.GetType() == typeof(string))
-                            {
-                                loContentTask = loHttpClientResponse.Content.ReadAsStringAsync();
-                            }
-                            else if (loHttpClientResponse.Content.GetType() == typeof(byte[]))
-                            {
-                                loContentTask = loHttpClientResponse.Content.ReadAsByteArrayAsync();
-                            }
+                            loContentTask = loHttpClientResponse.Content.ReadAsStreamAsync();
+                        }
+                        else if (loHttpClientResponse.Content.GetType() == typeof(string))
+                        {
+                            loContentTask = loHttpClientResponse.Content.ReadAsStringAsync();
+                        }
+                        else if (loHttpClientResponse.Content.GetType() == typeof(byte[]))
+                        {
+                            loContentTask = loHttpClientResponse.Content.ReadAsByteArrayAsync();
+                        }
 
-                            while (!loContentTask.IsCompleted)
-                            {
-                                System.Threading.Thread.Sleep(10);
-                            }
+                        while (!loContentTask.IsCompleted)
+                        {
+                            System.Threading.Thread.Sleep(10);
+                        }
 
-                            if (loContentTask.Status == System.Threading.Tasks.TaskStatus.RanToCompletion)
+                        if (loContentTask.Status == System.Threading.Tasks.TaskStatus.RanToCompletion)
+                        {
+                            if (loContentTask is System.Threading.Tasks.Task<Stream>)
                             {
-                                if (loContentTask is System.Threading.Tasks.Task<Stream>)
-                                {
-                                    loResponseContent = ((System.Threading.Tasks.Task<Stream>)loContentTask).Result;
-                                }
-                                else if (loContentTask is System.Threading.Tasks.Task<string>)
-                                {
-                                    loResponseContent = ((System.Threading.Tasks.Task<string>)loContentTask).Result;
-                                }
-                                else if (loContentTask is System.Threading.Tasks.Task<byte[]>)
-                                {
-                                    loResponseContent = ((System.Threading.Tasks.Task<byte[]>)loContentTask).Result;
-                                }
+                                loResponseContent = ((System.Threading.Tasks.Task<Stream>)loContentTask).Result;
                             }
-                            else
+                            else if (loContentTask is System.Threading.Tasks.Task<string>)
                             {
-                                throw new MaxException("Read content task to " + loReqestUrl + " completed with status " + loTask.Status.ToString());
+                                loResponseContent = ((System.Threading.Tasks.Task<string>)loContentTask).Result;
+                            }
+                            else if (loContentTask is System.Threading.Tasks.Task<byte[]>)
+                            {
+                                loResponseContent = ((System.Threading.Tasks.Task<byte[]>)loContentTask).Result;
                             }
                         }
-                    }
-                    else
-                    {
-                        throw new MaxException("Post call to " + loReqestUrl + " failed with response " + loHttpClientResponse.StatusCode.ToString());
+                        else
+                        {
+                            throw new MaxException("Read content task to " + loReqestUrl + " completed with status " + loTask.Status.ToString());
+                        }
                     }
                 }
                 else
@@ -425,6 +420,7 @@ namespace MaxFactry.Base.DataLayer.Provider
                 DateTime ldResponseEnd = DateTime.UtcNow;
 
                 loResponse.Add("ReasonPhrase", loHttpClientResponse.ReasonPhrase);
+                loResponse.Add("IsSuccessStatusCode", loHttpClientResponse.IsSuccessStatusCode);
                 loResponse.Add("StatusCode", MaxConvertLibrary.ConvertToString(typeof(object), loHttpClientResponse.StatusCode));
                 loResponse.Add("Version", MaxConvertLibrary.ConvertToString(typeof(object), loHttpClientResponse.Version));
                 loResponse.Add("RequestMessage.RequestUri", MaxConvertLibrary.ConvertToString(typeof(object), loHttpClientResponse.RequestMessage.RequestUri));

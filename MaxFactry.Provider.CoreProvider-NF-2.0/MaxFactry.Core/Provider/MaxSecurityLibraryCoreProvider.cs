@@ -59,7 +59,7 @@ namespace MaxFactry.Core.Provider
             MaxIndex loConfigIndex = new MaxIndex();
             loConfigIndex.Add("BasicAuthClientId", lsClientId);
             loConfigIndex.Add("BasicAuthClientSecret", lsClientSecret);
-            loConfigIndex.Add("grant_type", "client_credentails");
+            loConfigIndex.Add("grant_type", "client_credentials");
             loConfigIndex.Add("scope", lsScope);
             lsR = this.GetAccessToken(loTokenUrl, loConfigIndex);
 #endif
