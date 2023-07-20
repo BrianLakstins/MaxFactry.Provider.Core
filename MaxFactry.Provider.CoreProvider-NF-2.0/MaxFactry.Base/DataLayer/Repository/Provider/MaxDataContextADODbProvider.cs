@@ -46,6 +46,7 @@
 // <change date="11/30/2018" author="Brian A. Lakstins" description="Updated for changes to base.">
 // <change date="6/5/2020" author="Brian A. Lakstins" description="Updated for change to base.">
 // <change date="6/11/2020" author="Brian A. Lakstins" description="Fix error when value is null.">
+// <change date="7/20/2023" author="Brian A. Lakstins" description="Use constants to access configuration names instead of strings.">
 // </changelog>
 #endregion
 
@@ -642,9 +643,9 @@ namespace MaxFactry.Base.DataLayer.Provider
             loR.Add(
                 lsName + ":" + typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextADODbProvider) + "-DbProviderFactoryProviderName",
                 lsName);
-            loR.Add(typeof(MaxFactry.Core.MaxProvider) + "-DefaultContextProviderName", "DefaultContextProvider-" + lsName);
+            loR.Add(typeof(MaxFactry.Core.MaxProvider) + "-" + MaxDataContextDefaultProvider.DefaultContextProviderConfigName, "DefaultContextProvider-" + lsName);
             loR.Add("DefaultContextProvider-" + lsName, typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextADODbProvider));
-            loR.Add(typeof(MaxFactry.Core.MaxProvider) + "-ContextProviderName", lsName);
+            loR.Add(typeof(MaxFactry.Core.MaxProvider) + "-" + MaxDataContextDefaultProvider.ContextProviderConfigName, lsName);
 
             MaxFactry.Core.MaxFactryLibrary.SetValue(lsName + ":" + typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextADODbProvider) + "-Config", loR);
             MaxFactry.Core.MaxFactryLibrary.RemoveSingletonProvider(typeof(MaxFactry.Provider.CoreProvider.DataLayer.Provider.MaxDbProviderFactoriesDefaultLibraryProvider), lsName);
