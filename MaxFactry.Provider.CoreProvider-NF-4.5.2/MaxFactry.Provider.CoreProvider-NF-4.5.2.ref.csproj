@@ -93,6 +93,9 @@
     <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Core\Provider\MaxSecurityLibraryCoreProvider.cs">
       <Link>MaxFactry.Core\Provider\MaxSecurityLibraryCoreProvider.cs</Link>
     </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxStartup.cs">
+      <Link>MaxStartup.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -129,11 +132,11 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-	<Target Name="SpicNSpan" AfterTargets="Clean">
-		<!-- common vars https://msdn.microsoft.com/en-us/library/c02as0cs.aspx?f=255&MSPPError=-2147217396 -->
-		<RemoveDir Directories="$(TargetDir)" />
-		<!-- bin -->
-		<RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)" />
-		<!-- obj -->
-	</Target>
+  <Target Name="SpicNSpan" AfterTargets="Clean">
+    <!-- common vars https://msdn.microsoft.com/en-us/library/c02as0cs.aspx?f=255&MSPPError=-2147217396 -->
+    <RemoveDir Directories="$(TargetDir)" />
+    <!-- bin -->
+    <RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)" />
+    <!-- obj -->
+  </Target>
 </Project>

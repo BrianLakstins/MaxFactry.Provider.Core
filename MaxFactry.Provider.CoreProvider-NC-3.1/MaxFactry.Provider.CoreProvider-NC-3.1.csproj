@@ -30,6 +30,7 @@
     <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Repository\Provider\MaxStorageWriteRepositoryHttpClientProvider.cs" Link="MaxFactry.Base\DataLayer\Repository\Provider\MaxStorageWriteRepositoryHttpClientProvider.cs" />
     <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs" Link="MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs" />
     <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Core\Provider\MaxSecurityLibraryCoreProvider.cs" Link="MaxFactry.Core\Provider\MaxSecurityLibraryCoreProvider.cs" />
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxStartup.cs" Link="MaxStartup.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MaxFactry.General" Version="1.0.20.3" />
+    <PackageReference Include="MaxFactry.General" Version="1.0.20.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
     <PackageReference Include="System.Data.OleDb" Version="7.0.0" />

@@ -94,6 +94,9 @@
     <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Core\Provider\MaxSecurityLibraryCoreProvider.cs">
       <Link>MaxFactry.Core\Provider\MaxSecurityLibraryCoreProvider.cs</Link>
     </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxStartup.cs">
+      <Link>MaxStartup.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -103,7 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MaxFactry.General">
-      <Version>1.0.20.2</Version>
+      <Version>1.0.20.4</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
