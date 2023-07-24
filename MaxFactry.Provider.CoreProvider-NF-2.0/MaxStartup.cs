@@ -85,6 +85,9 @@ namespace MaxFactry.Provider.CoreProvider
         /// <param name="loConfig">The configuration for the default repository provider.</param>
         public virtual void SetProviderConfiguration(MaxIndex loConfig)
         {
+            loConfig.Add(typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextMSSqlProvider).Name, typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextMSSqlProvider));
+            loConfig.Add(typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextHttpClientProvider).Name, typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextHttpClientProvider));
+            loConfig.Add(typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextSerialPortProvider).Name, typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextSerialPortProvider));
         }
 
         /// <summary>

@@ -52,7 +52,7 @@ namespace MaxFactry.Base.DataLayer.Provider
         private static object _oLock = new object();
 
         /// <summary>
-        /// Initializes a new instance of the MaxDataContextSerialPortProvider class
+        /// Initializes a new instance of the MaxDataContextHttpClientProvider class
         /// </summary>
         public MaxDataContextHttpClientProvider()
             : base()
