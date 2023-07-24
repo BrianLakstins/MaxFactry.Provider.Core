@@ -5,9 +5,9 @@
     <RootNamespace>MaxFactry.Provider.CoreProvider_NC_6._0</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
 	  <Nullable>enable</Nullable>
-	  <Version>1.0.20.8</Version>
-	  <AssemblyVersion>1.0.20.8</AssemblyVersion>
-	  <FileVersion>2023.07.24.02</FileVersion>
+	  <Version>1.0.22.0</Version>
+	  <AssemblyVersion>1.0.22.0</AssemblyVersion>
+	  <FileVersion>2023.07.24.04</FileVersion>
 	  <SignAssembly>True</SignAssembly>
 	  <AssemblyOriginatorKeyFile>MaxFactry.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
@@ -52,7 +52,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MaxFactry.General" Version="1.0.20.4" />
+		<PackageReference Include="MaxFactry.General" Version="1.0.22" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="System.Data.OleDb" Version="7.0.0" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
