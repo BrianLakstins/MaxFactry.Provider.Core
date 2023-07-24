@@ -92,10 +92,20 @@ namespace MaxFactry.Provider.CoreProvider
         /// </summary>
         public virtual void RegisterProviders()
         {
+            this.RegisterProviderSecurityLibraryCoreProvider();
+            this.RegisterProviderConvertLibraryCoreProvider();
+        }
+
+        public virtual void RegisterProviderSecurityLibraryCoreProvider()
+        {
+            //// Add the MaxSecurityLibraryCoreProvider as a provider for the MaxSecurityLibrary
             MaxFactry.Core.MaxSecurityLibrary.Instance.ProviderAdd(
                 typeof(MaxFactry.Core.Provider.MaxSecurityLibraryDefaultProvider).ToString(),
                 typeof(MaxFactry.Core.Provider.MaxSecurityLibraryCoreProvider));
+        }
 
+        public virtual void RegisterProviderConvertLibraryCoreProvider()
+        {
             //// Use the "MaxConvertLibraryCoreProvider" as the provider for the MaxConvertLibrary
             string lsConvertLibraryDefaultProvider = typeof(MaxFactry.Core.Provider.MaxConvertLibraryDefaultProvider).ToString();
             string lsClass = typeof(MaxConvertLibraryCoreProvider).Name; //MaxConvertLibraryCoreProvider
