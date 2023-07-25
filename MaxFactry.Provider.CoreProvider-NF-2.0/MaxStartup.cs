@@ -33,6 +33,7 @@
 
 namespace MaxFactry.Provider.CoreProvider
 {
+    using MaxFactry.Base.DataLayer.Provider;
     using MaxFactry.Core;
     using MaxFactry.Core.Provider;
 
@@ -85,9 +86,9 @@ namespace MaxFactry.Provider.CoreProvider
         /// <param name="loConfig">The configuration for the default repository provider.</param>
         public virtual void SetProviderConfiguration(MaxIndex loConfig)
         {
-            loConfig.Add(typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextMSSqlProvider).Name, typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextMSSqlProvider));
-            loConfig.Add(typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextHttpClientProvider).Name, typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextHttpClientProvider));
-            loConfig.Add(typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextSerialPortProvider).Name, typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextSerialPortProvider));
+            loConfig.Add(typeof(MaxDataContextMSSqlProvider).Name, typeof(MaxDataContextMSSqlProvider));
+            loConfig.Add(typeof(MaxDataContextHttpClientProvider).Name, typeof(MaxDataContextHttpClientProvider));
+            loConfig.Add(typeof(MaxDataContextSerialPortProvider).Name, typeof(MaxDataContextSerialPortProvider));
         }
 
         /// <summary>
@@ -102,15 +103,15 @@ namespace MaxFactry.Provider.CoreProvider
         public virtual void RegisterProviderSecurityLibraryCoreProvider()
         {
             //// Add the MaxSecurityLibraryCoreProvider as a provider for the MaxSecurityLibrary
-            MaxFactry.Core.MaxSecurityLibrary.Instance.ProviderAdd(
-                typeof(MaxFactry.Core.Provider.MaxSecurityLibraryDefaultProvider).ToString(),
-                typeof(MaxFactry.Core.Provider.MaxSecurityLibraryCoreProvider));
+            MaxSecurityLibrary.Instance.ProviderAdd(
+                typeof(MaxSecurityLibraryDefaultProvider).ToString(),
+                typeof(MaxSecurityLibraryCoreProvider));
         }
 
         public virtual void RegisterProviderConvertLibraryCoreProvider()
         {
             //// Use the "MaxConvertLibraryCoreProvider" as the provider for the MaxConvertLibrary
-            string lsConvertLibraryDefaultProvider = typeof(MaxFactry.Core.Provider.MaxConvertLibraryDefaultProvider).ToString();
+            string lsConvertLibraryDefaultProvider = typeof(MaxConvertLibraryDefaultProvider).ToString();
             string lsClass = typeof(MaxConvertLibraryCoreProvider).Name; //MaxConvertLibraryCoreProvider
             string lsName = lsClass;
             string lsNamespace = typeof(MaxConvertLibraryCoreProvider).Namespace; //MaxFactry.Core.Provider
