@@ -42,6 +42,7 @@
 namespace MaxFactry.Core.Provider
 {
     using System;
+    using System.Collections.Generic;
     using System.Text;
 
     /// <summary>
@@ -138,6 +139,36 @@ namespace MaxFactry.Core.Provider
                                     {
                                         loValue = DateTime.SpecifyKind((DateTime)loValue, DateTimeKind.Utc);
                                     }
+                                }
+                                else if (loValue is Newtonsoft.Json.Linq.JArray)
+                                {
+                                    Newtonsoft.Json.Linq.JArray laValue = loValue as Newtonsoft.Json.Linq.JArray;
+                                    object[] laMaxIndex = new object[laValue.Count];
+                                    for (int lnV = 0; lnV < laValue.Count; lnV++)
+                                    {
+                                        string lsJsonArray = Newtonsoft.Json.JsonConvert.SerializeObject(laValue[lnV]);
+                                        if (laValue[lnV] is Newtonsoft.Json.Linq.JValue)
+                                        {
+                                            laMaxIndex[lnV] = ((Newtonsoft.Json.Linq.JValue)laValue[lnV]).Value;
+                                        }
+                                        else if (laValue[lnV] is Newtonsoft.Json.Linq.JObject)
+                                        {
+                                            MaxIndex loMaxIndex = this.DeserializeFromJsonConditional(lsJsonArray, typeof(MaxIndex)) as MaxIndex;
+                                            laMaxIndex[lnV] = loMaxIndex;
+                                        }
+                                    }
+
+                                    loValue = laMaxIndex;
+                                }
+                                else if (loValue is Newtonsoft.Json.Linq.JValue)
+                                {
+                                    loValue = ((Newtonsoft.Json.Linq.JValue)loValue).Value;
+                                }
+                                else if (loValue is Newtonsoft.Json.Linq.JObject)
+                                {
+                                    string lsJsonObject = Newtonsoft.Json.JsonConvert.SerializeObject(loValue);
+                                    MaxIndex loMaxIndex = this.DeserializeFromJsonConditional(lsJsonObject, typeof(MaxIndex)) as MaxIndex;
+                                    loValue = loMaxIndex;
                                 }
 
                                 laIndexData[lnCurrent] = new MaxIndexItemStructure(lnCurrent, lsKey, loValue);
