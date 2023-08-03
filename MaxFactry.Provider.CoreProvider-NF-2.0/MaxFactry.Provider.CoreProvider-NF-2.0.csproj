@@ -43,7 +43,6 @@
   <ItemGroup>
     <Compile Include="MaxStartup.cs" />
     <Compile Include="DataLayer\DataModel\MaxDataSetDataModel.cs" />
-    <Compile Include="DataLayer\DataModel\MaxHttpClientDataModel.cs" />
     <Compile Include="DataLayer\DataModel\MaxSerialPortDataModel.cs" />
     <Compile Include="DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs" />
     <Compile Include="DataLayer\Library\Interface\IMaxDbProviderFactoryLibraryProvider.cs" />
@@ -66,7 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MaxFactry.General">
-      <Version>1.0.22.2</Version>
+      <Version>1.0.22.3</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>

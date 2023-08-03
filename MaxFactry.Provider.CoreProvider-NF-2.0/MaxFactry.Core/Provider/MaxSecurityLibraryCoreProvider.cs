@@ -84,7 +84,7 @@ namespace MaxFactry.Core.Provider
             MaxDataList loDataList = MaxStorageWriteRepository.Select(loData, null, 0, 0, string.Empty, out lnTotal);
             if (loDataList.Count == 1)
             {
-                object loResponse = loDataList[0].Get(loDataModel.ResponseRaw);
+                object loResponse = loDataList[0].Get(loDataModel.ResponseContent);
                 lsR = loResponse as string;
                 if (null == lsR && loResponse is Stream)
                 {

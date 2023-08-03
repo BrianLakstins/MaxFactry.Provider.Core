@@ -428,7 +428,7 @@ namespace MaxFactry.Base.DataLayer.Provider
                 loDataReturn.Set(loDataModel.RequestTime, ldRequestStart);
                 loDataReturn.Set(loDataModel.ResponseTime, ldResponseEnd);
                 loDataReturn.Set(loDataModel.Response, MaxConvertLibrary.SerializeObjectToString(loResponse));
-                loDataReturn.Set(loDataModel.ResponseRaw, loResponseContent);
+                loDataReturn.Set(loDataModel.ResponseContent, loResponseContent);
                 loDataReturn.Set(loDataModel.Log, MaxConvertLibrary.SerializeObjectToString(this._oLog));
                 loDataReturn.Set(loDataModel.RequestUrl, loReqestUrl);
                 loDataReturn.Set(loDataModel.RequestContent, loContent);

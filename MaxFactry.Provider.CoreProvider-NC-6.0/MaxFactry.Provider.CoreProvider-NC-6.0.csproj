@@ -23,7 +23,6 @@
 
 	<ItemGroup>
 		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\DataModel\MaxDataSetDataModel.cs" Link="DataLayer\DataModel\MaxDataSetDataModel.cs" />
-		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\DataModel\MaxHttpClientDataModel.cs" Link="DataLayer\DataModel\MaxHttpClientDataModel.cs" />
 		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\DataModel\MaxSerialPortDataModel.cs" Link="DataLayer\DataModel\MaxSerialPortDataModel.cs" />
 		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs" Link="DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs" />
 		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Interface\IMaxDbProviderFactoryLibraryProvider.cs" Link="DataLayer\Library\Interface\IMaxDbProviderFactoryLibraryProvider.cs" />
@@ -52,7 +51,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MaxFactry.General" Version="1.0.22.2" />
+		<PackageReference Include="MaxFactry.General" Version="1.0.22.3" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="System.Data.OleDb" Version="7.0.0" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
