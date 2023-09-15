@@ -434,10 +434,7 @@ namespace MaxFactry.Base.DataLayer.Provider
 
         protected virtual void SendRequest(string lsRequest)
         {
-            if (null != this._sPortName && this._sPortName.StartsWith("COM"))
-            {
-                MaxDataSerialPortLibrary.SendRequest(this._sPortName, lsRequest);
-            }
+            MaxDataSerialPortLibrary.SendRequest(this._sPortName, lsRequest);
         }
 
         protected virtual byte[] GetResponse()

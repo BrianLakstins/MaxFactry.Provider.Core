@@ -46,6 +46,7 @@ namespace MaxFactry.Base.DataLayer.Library
     using System.Collections.Generic;
     using System.IO;
     using System.IO.Ports;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using MaxFactry.Core;
 
@@ -383,7 +384,7 @@ namespace MaxFactry.Base.DataLayer.Library
 
             if (null != loException)
             {
-                MaxLogLibrary.Log(new MaxLogEntryStructure("MaxDataSerialPortLibrary.RequestResponse." + lsPortName, MaxEnumGroup.LogStatic, "Exception sending request {lsRequest} to serial port {Name} during SendRequest", loException, lsRequest, lsPortName));
+                MaxLogLibrary.Log(new MaxLogEntryStructure(typeof(MaxDataSerialPortLibrary), "SendRequest", MaxEnumGroup.LogError, "Exception sending request {Request} to serial port {PortName} during SendRequest", loException, lsRequest, lsPortName));
                 throw loException;
             }
         }
