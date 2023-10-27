@@ -129,8 +129,8 @@ namespace MaxFactry.Base.DataLayer.Library
                 DateTime loLockTime = GetPortLockTime(lsName);
                 if (loLockTime > DateTime.MinValue)
                 {
-                    //// Wait up to 2 second for the lock to free
-                    while (loLockTime > DateTime.MinValue && ldStart.AddSeconds(2) < DateTime.UtcNow)
+                    //// Wait up to 5 seconds for the lock to free
+                    while (loLockTime > DateTime.MinValue && ldStart.AddSeconds(5) < DateTime.UtcNow)
                     {
                         System.Threading.Thread.Sleep(100);
                         loLockTime = GetPortLockTime(lsName);
@@ -364,7 +364,8 @@ namespace MaxFactry.Base.DataLayer.Library
                         }
                         else
                         {
-                            loException = new MaxException("Timed out gettting lock on port [" + lsPortName + "] during SendRequest");
+                            string lsSerialPortLockIndex = MaxConvertLibrary.SerializeObjectToString(typeof(object), _oSerialPortLockIndex);
+                            loException = new MaxException("Timed out getting lock on port [" + lsPortName + "] during SendRequest\r\n" + lsSerialPortLockIndex);
                         }
                     }
                     else
