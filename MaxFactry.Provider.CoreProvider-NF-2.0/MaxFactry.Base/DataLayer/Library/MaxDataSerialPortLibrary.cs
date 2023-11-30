@@ -104,44 +104,43 @@ namespace MaxFactry.Base.DataLayer.Library
         /// </summary>
         /// <param name="lsName"></param>
         /// <returns></returns>
-        protected static bool AddPortLock(string lsName)
+        protected static string AddPortLock(string lsName)
         {
-            bool lbR = false;            
+            string lsR = null;           
             lock (_oLock)
             {
-                bool lbAddLock = true;
+                object loPortLockValue = null;
+                double lnWaitTime = 10;
+                DateTime ldNowUtc = DateTime.UtcNow;
+                DateTime ldWaitUntilUtc = ldNowUtc.AddSeconds(lnWaitTime);
                 if (_oSerialPortIndex.Contains(lsName) && null != _oSerialPortIndex[lsName])
                 {
-                    lbAddLock = false;
-                    double lnWaitTime = 10;
-                    DateTime ldWaitUntil = DateTime.UtcNow.AddSeconds(lnWaitTime);
+                    lsR = "Waiting up to " + lnWaitTime + " seconds";
                     //// Wait up some seconds for the lock to free
-                    while (null != _oSerialPortIndex[lsName] && ldWaitUntil < DateTime.UtcNow)
+                    loPortLockValue = _oSerialPortLockIndex[lsName];
+                    while (null != loPortLockValue && DateTime.UtcNow < ldWaitUntilUtc)
                     {
                         System.Threading.Thread.Sleep(500);
-                    }
-
-                    if (null == _oSerialPortIndex[lsName])
-                    {
-                        lbAddLock = true;
-                    }
-                    else
-                    {
-                        MaxLogLibrary.Log(new MaxLogEntryStructure(typeof(MaxDataSerialPortLibrary), "AddPortLock[" + lsName + "]", MaxEnumGroup.LogError, "Waited for lock to clear for {WaitTime} seconds, but it was set at {LockTime} and has not been removed yet.", lnWaitTime, _oSerialPortIndex[lsName]));
+                        loPortLockValue = _oSerialPortLockIndex[lsName];
                     }
                 }
 
                 //// Add a lock only if there is not one already
-                if (lbAddLock)
+                if (null == loPortLockValue)
                 {
+                    lsR = null;
                     //// Lock the port and allow any process to use it that gets the lock
                     _oSerialPortLockIndex.Add(lsName, DateTime.UtcNow);
-                    lbR = true;
                     MaxLogLibrary.Log(new MaxLogEntryStructure(typeof(MaxDataSerialPortLibrary), "AddPortLock[" + lsName + "]", MaxEnumGroup.LogInfo, "Added lock to port {Name}", lsName));
+                } 
+                else if (loPortLockValue is DateTime)
+                {
+                    lsR = ((DateTime)loPortLockValue).ToString();
+                    MaxLogLibrary.Log(new MaxLogEntryStructure(typeof(MaxDataSerialPortLibrary), "AddPortLock[" + lsName + "]", MaxEnumGroup.LogError, "Started to wait at {StartTime} and waited for lock to clear for {WaitTime} seconds until {WaitUntil}, but it was set at {LockTime} and has not been removed yet.", ldNowUtc, lnWaitTime, ldWaitUntilUtc, lsR));
                 }
             }
 
-            return lbR;
+            return lsR;
         }
 
         /// <summary>
@@ -342,7 +341,8 @@ namespace MaxFactry.Base.DataLayer.Library
                 {
                     if (IsConnected(lsPortName))
                     {
-                        if (AddPortLock(lsPortName))
+                        string lsPortLockResult = AddPortLock(lsPortName);
+                        if (null == lsPortLockResult)
                         {
                             SerialPort loPort = GetPort(lsPortName);
                             if (null != loPort)
@@ -358,8 +358,7 @@ namespace MaxFactry.Base.DataLayer.Library
                         }
                         else
                         {
-                            string lsSerialPortLockIndex = MaxConvertLibrary.SerializeObjectToString(typeof(object), _oSerialPortLockIndex);
-                            loException = new MaxException("Timed out getting lock on port [" + lsPortName + "] during SendRequest\r\n" + lsSerialPortLockIndex);
+                            loException = new MaxException("Timed out getting lock on port [" + lsPortName + "] during SendRequest with result [" + lsPortLockResult + "]");
                         }
                     }
                     else
@@ -540,7 +539,8 @@ namespace MaxFactry.Base.DataLayer.Library
             while (null != loPort)
             {
                 MaxLogLibrary.Log(new MaxLogEntryStructure("MaxDataSerialPortLibrary.Read." + lsPortName, MaxEnumGroup.LogStatic, "Adding lock for serial port {Name} during ReadContinuous", loPort.PortName));
-                if (AddPortLock(loPort.PortName))
+                string lsPortLockResult = AddPortLock(loPort.PortName);
+                if (null == lsPortLockResult)
                 {
                     MaxLogLibrary.Log(new MaxLogEntryStructure("MaxDataSerialPortLibrary.Read." + lsPortName, MaxEnumGroup.LogStatic, "Attempting to start read from serial port {Name} during ReadContinuous", loPort.PortName));
                     if (!StartBeginRead(loPort))
@@ -552,7 +552,7 @@ namespace MaxFactry.Base.DataLayer.Library
                 }
                 else
                 {
-                    MaxLogLibrary.Log(new MaxLogEntryStructure("MaxDataSerialPortLibrary.Read.Error." + lsPortName, MaxEnumGroup.LogStatic, "Failed to add lock for serial port {Name} during ReadContinuous", loPort.PortName));
+                    MaxLogLibrary.Log(new MaxLogEntryStructure("MaxDataSerialPortLibrary.Read.Error." + lsPortName, MaxEnumGroup.LogStatic, "Failed to add lock for serial port {Name} during ReadContinuous with result {PortLockResult}", loPort.PortName, lsPortLockResult));
                 }
                 
                 //// Pause 1 second between attempted reads
