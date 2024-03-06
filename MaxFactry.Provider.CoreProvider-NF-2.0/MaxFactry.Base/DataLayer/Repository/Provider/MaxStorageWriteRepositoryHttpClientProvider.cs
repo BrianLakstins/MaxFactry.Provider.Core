@@ -50,23 +50,23 @@ namespace MaxFactry.Base.DataLayer.Provider
         /// <param name="loDataQuery">Query information to filter results.</param>
         /// <param name="lnPageIndex">Page to return.</param>
         /// <param name="lnPageSize">Items per page.</param>
-        /// <param name="lsSort">Sort information.</param>
+        /// <param name="lsOrderBy">Sort information.</param>
         /// <param name="lnTotal">Total items found.</param>
-        /// <param name="laFields">list of fields to return from select.</param>
+        /// <param name="laDataNameList">list of fields to return from select.</param>
         /// <returns>List of data from select.</returns>
-        public override MaxDataList Select(MaxData loData, MaxDataQuery loDataQuery, int lnPageIndex, int lnPageSize, string lsSort, out int lnTotal, params string[] laFields)
+        public override MaxDataList Select(MaxData loData, MaxDataQuery loDataQuery, int lnPageIndex, int lnPageSize, string lsOrderBy, out int lnTotal, params string[] laDataNameList)
         {
             MaxDataList loR = new MaxDataList();
             if (loData.DataModel is MaxHttpClientDataModel)
             {
                 loData.Set("IMaxDataContextProvider", typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextHttpClientProvider));
-                MaxDataList loDataList = base.Select(loData, loDataQuery, lnPageIndex, lnPageIndex, lsSort, out lnTotal, laFields);
+                MaxDataList loDataList = base.Select(loData, loDataQuery, lnPageIndex, lnPageIndex, lsOrderBy, out lnTotal, laDataNameList);
                 loR = loDataList;
                 lnTotal = loR.Count;
             }
             else
             {
-                loR = base.Select(loData, loDataQuery, lnPageIndex, lnPageIndex, lsSort, out lnTotal, laFields);
+                loR = base.Select(loData, loDataQuery, lnPageIndex, lnPageIndex, lsOrderBy, out lnTotal, laDataNameList);
             }
 
             return loR;

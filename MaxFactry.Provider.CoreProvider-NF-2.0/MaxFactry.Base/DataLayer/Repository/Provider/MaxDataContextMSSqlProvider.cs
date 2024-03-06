@@ -64,11 +64,11 @@ namespace MaxFactry.Base.DataLayer.Provider
         /// <param name="loDataQuery">Query information to filter results.</param>
         /// <param name="lnPageIndex">Page to return.</param>
         /// <param name="lnPageSize">Items per page.</param>
-        /// <param name="lsSort">Sort Information.</param>
+        /// <param name="lsOrderBy">Sort Information.</param>
         /// <param name="lnTotal">Total items found.</param>
-        /// <param name="laFields">list of fields to return from select.</param>
+        /// <param name="laDataNameList">list of fields to return from select.</param>
         /// <returns>List of data from select.</returns>
-        public override MaxDataList Select(MaxData loData, MaxDataQuery loDataQuery, int lnPageIndex, int lnPageSize, string lsSort, out int lnTotal, params string[] laFields)
+        public override MaxDataList Select(MaxData loData, MaxDataQuery loDataQuery, int lnPageIndex, int lnPageSize, string lsOrderBy, out int lnTotal, params string[] laDataNameList)
         {
             MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "Select [" + loData.DataModel.DataStorageName + "] start", "MaxDataContextADODbProvider");
             MaxDataList loR = new MaxDataList(loData.DataModel);
@@ -78,14 +78,14 @@ namespace MaxFactry.Base.DataLayer.Provider
             {
                 string lsStorageKey = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loData.DataModel.StorageKey));
                 loData.Set(loData.DataModel.StorageKey, lsStorageKey);
-                string lsSql = MaxSqlGenerationLibrary.GetSelect(this.SqlProviderName, this.SqlProviderType, loData, loDataQuery, laFields);
+                string lsSql = MaxSqlGenerationLibrary.GetSelect(this.SqlProviderName, this.SqlProviderType, loData, loDataQuery, laDataNameList);
                 MaxLogLibrary.Log(new MaxLogEntryStructure("SQL", MaxEnumGroup.LogDebug, "Select [{DataStorageName}] sql [{SQL}]", loData.DataModel.DataStorageName, lsSql));
                 if (lsSql.Length > 0)
                 {
                     string lsOrderSql = string.Empty;
-                    if (!string.IsNullOrEmpty(lsSort))
+                    if (!string.IsNullOrEmpty(lsOrderBy))
                     {
-                        lsOrderSql = " ORDER BY " + lsSort;
+                        lsOrderSql = " ORDER BY " + lsOrderBy;
                         if (lnPageIndex > 0 && lnPageSize > 0)
                         {
                             int lnOffset = (lnPageIndex - 1) * lnPageSize;

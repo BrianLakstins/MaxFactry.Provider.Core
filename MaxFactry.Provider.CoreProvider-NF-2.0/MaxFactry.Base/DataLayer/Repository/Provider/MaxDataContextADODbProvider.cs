@@ -424,9 +424,9 @@ namespace MaxFactry.Base.DataLayer.Provider
         /// Selects all data from the data storage name for the specified type.
         /// </summary>
         /// <param name="lsDataStorageName">Name of the data storage (table name).</param>
-        /// <param name="laFields">list of fields to return from select</param>
+        /// <param name="laDataNameList">list of fields to return from select</param>
         /// <returns>List of data elements with a base data model.</returns>
-        public override MaxDataList SelectAll(string lsDataStorageName, params string[] laFields)
+        public override MaxDataList SelectAll(string lsDataStorageName, params string[] laDataNameList)
         {
             MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "Select [" + lsDataStorageName + "] start", "MaxDataContextADODbProvider");
             MaxDataModel loDataModel = new MaxDataModel(lsDataStorageName);
@@ -434,7 +434,7 @@ namespace MaxFactry.Base.DataLayer.Provider
             DbConnection loConnection = MaxDbProviderFactoryLibrary.GetConnection(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
             if (this.IsTableFound(loDataModel, loConnection))
             {
-                string lsSql = MaxSqlGenerationLibrary.GetSelect(this.SqlProviderName, this.SqlProviderType, lsDataStorageName, laFields);
+                string lsSql = MaxSqlGenerationLibrary.GetSelect(this.SqlProviderName, this.SqlProviderType, lsDataStorageName, laDataNameList);
                 MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "Select [" + lsDataStorageName + "] sql [" + lsSql + "]", "MaxDataContextADODbProvider");
                 if (lsSql.Length > 0)
                 {
@@ -468,11 +468,11 @@ namespace MaxFactry.Base.DataLayer.Provider
         /// <param name="loDataQuery">Query information to filter results.</param>
         /// <param name="lnPageIndex">Page to return.</param>
         /// <param name="lnPageSize">Items per page.</param>
-        /// <param name="lsSort">Sort Information.</param>
+        /// <param name="lsOrderBy">Sort Information.</param>
         /// <param name="lnTotal">Total items found.</param>
-        /// <param name="laFields">list of fields to return from select.</param>
+        /// <param name="laDataNameList">list of fields to return from select.</param>
         /// <returns>List of data from select.</returns>
-        public override MaxDataList Select(MaxData loData, MaxDataQuery loDataQuery, int lnPageIndex, int lnPageSize, string lsSort, out int lnTotal, params string[] laFields)
+        public override MaxDataList Select(MaxData loData, MaxDataQuery loDataQuery, int lnPageIndex, int lnPageSize, string lsOrderBy, out int lnTotal, params string[] laDataNameList)
 		{
             MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "Select [" + loData.DataModel.DataStorageName + "] start", "MaxDataContextADODbProvider");
 			MaxDataList loR = new MaxDataList(loData.DataModel);
@@ -482,7 +482,7 @@ namespace MaxFactry.Base.DataLayer.Provider
 			{
                 string lsStorageKey = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loData.DataModel.StorageKey));
                 loData.Set(loData.DataModel.StorageKey, lsStorageKey);
-                string lsSql = MaxSqlGenerationLibrary.GetSelect(this.SqlProviderName, this.SqlProviderType, loData, loDataQuery, laFields);
+                string lsSql = MaxSqlGenerationLibrary.GetSelect(this.SqlProviderName, this.SqlProviderType, loData, loDataQuery, laDataNameList);
                 MaxLogLibrary.Log(new MaxLogEntryStructure("SQL", MaxEnumGroup.LogDebug, "Select [{DataStorageName}] sql [{SQL}]", loData.DataModel.DataStorageName, lsSql));
                 if (lsSql.Length > 0)
 				{

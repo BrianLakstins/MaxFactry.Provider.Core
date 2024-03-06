@@ -147,9 +147,9 @@ namespace MaxFactry.Base.DataLayer.Provider
         /// Selects all data from the data storage name for the specified type.
         /// </summary>
         /// <param name="lsDataStorageName">Name of the data storage (table name).</param>
-        /// <param name="laFields">list of fields to return from select</param>
+        /// <param name="laDataNameList">list of fields to return from select</param>
         /// <returns>List of data elements with a base data model.</returns>
-        public virtual MaxDataList SelectAll(string lsDataStorageName, params string[] laFields)
+        public virtual MaxDataList SelectAll(string lsDataStorageName, params string[] laDataNameList)
         {
             MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "Select [" + lsDataStorageName + "] start", "MaxDataContextHttpClientProvider");
             MaxDataModel loDataModel = new MaxDataModel(lsDataStorageName);
@@ -166,13 +166,13 @@ namespace MaxFactry.Base.DataLayer.Provider
         /// <param name="loDataQuery">Query information to filter results.</param>
         /// <param name="lnPageIndex">Page to return.</param>
         /// <param name="lnPageSize">Items per page.</param>
-        /// <param name="lsSort">Sort information.</param>
+        /// <param name="lsOrderBy">Sort information.</param>
         /// <param name="lnTotal">Total items found.</param>
-        /// <param name="laFields">list of fields to return from select.</param>
+        /// <param name="laDataNameList">list of fields to return from select.</param>
         /// <returns>List of data from select.</returns>
-        public virtual MaxDataList Select(MaxData loData, MaxDataQuery loDataQuery, int lnPageIndex, int lnPageSize, string lsSort, out int lnTotal, params string[] laFields)
+        public virtual MaxDataList Select(MaxData loData, MaxDataQuery loDataQuery, int lnPageIndex, int lnPageSize, string lsOrderBy, out int lnTotal, params string[] laDataNameList)
         {
-            return this.SelectConditional(loData, loDataQuery, lnPageIndex, lnPageIndex, out lnTotal, laFields);
+            return this.SelectConditional(loData, loDataQuery, lnPageIndex, lnPageIndex, out lnTotal, laDataNameList);
         }
 
         /// <summary>
@@ -243,9 +243,9 @@ namespace MaxFactry.Base.DataLayer.Provider
         /// <param name="lnPageIndex">Page to return.</param>
         /// <param name="lnPageSize">Items per page.</param>
         /// <param name="lnTotal">Total items found.</param>
-        /// <param name="laFields">list of fields to return from select.</param>
+        /// <param name="laDataNameList">list of fields to return from select.</param>
         /// <returns>List of data from select.</returns>
-        public virtual MaxDataList SelectConditional(MaxData loData, MaxDataQuery loDataQuery, int lnPageIndex, int lnPageSize, out int lnTotal, params string[] laFields)
+        public virtual MaxDataList SelectConditional(MaxData loData, MaxDataQuery loDataQuery, int lnPageIndex, int lnPageSize, out int lnTotal, params string[] laDataNameList)
         {
             MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "Select [" + loData.DataModel.DataStorageName + "] start", "MaxDataContextHttpClientProvider");
             MaxHttpClientDataModel loDataModel = loData.DataModel as MaxHttpClientDataModel;
@@ -455,7 +455,7 @@ namespace MaxFactry.Base.DataLayer.Provider
         /// <param name="lnTotal">Total items found.</param>
         /// <param name="laFields">list of fields to return from select.</param>
         /// <returns>List of data from select.</returns>
-        public virtual MaxDataList SelectConditional(MaxData loData, MaxDataQuery loDataQuery, int lnPageIndex, int lnPageSize, out int lnTotal, params string[] laFields)
+        public virtual MaxDataList SelectConditional(MaxData loData, MaxDataQuery loDataQuery, int lnPageIndex, int lnPageSize, out int lnTotal, params string[] laDataNameList)
         {
             throw new NotImplementedException();
         }
