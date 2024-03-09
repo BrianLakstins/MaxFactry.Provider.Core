@@ -23,7 +23,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxFactry.Provider.CoreProv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaxFactry.Provider.CoreProvider-NC-6.0", "MaxFactry.Provider.CoreProvider-NC-6.0\MaxFactry.Provider.CoreProvider-NC-6.0.csproj", "{E6BEC093-ED80-4B9F-941B-B1F9D60B3467}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxFactry.Provider.CoreProvider-NC-3.1", "MaxFactry.Provider.CoreProvider-NC-3.1\MaxFactry.Provider.CoreProvider-NC-3.1.csproj", "{3EF33C47-6412-4889-A3A0-51D1ACB27197}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaxFactry.Provider.CoreProvider-NC-3.1", "MaxFactry.Provider.CoreProvider-NC-3.1\MaxFactry.Provider.CoreProvider-NC-3.1.csproj", "{3EF33C47-6412-4889-A3A0-51D1ACB27197}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxFactry.Provider.CoreProvider-NC-8.0", "MaxFactry.Provider.CoreProvider-NC-8.0\MaxFactry.Provider.CoreProvider-NC-8.0.csproj", "{4797C970-79EB-40DE-998C-F6D400DBBE02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,10 @@ Global
 		{3EF33C47-6412-4889-A3A0-51D1ACB27197}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EF33C47-6412-4889-A3A0-51D1ACB27197}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EF33C47-6412-4889-A3A0-51D1ACB27197}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4797C970-79EB-40DE-998C-F6D400DBBE02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4797C970-79EB-40DE-998C-F6D400DBBE02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4797C970-79EB-40DE-998C-F6D400DBBE02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4797C970-79EB-40DE-998C-F6D400DBBE02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
