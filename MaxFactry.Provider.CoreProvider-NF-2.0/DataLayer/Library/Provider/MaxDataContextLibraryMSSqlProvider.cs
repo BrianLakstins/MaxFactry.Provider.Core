@@ -33,10 +33,11 @@
 // <change date="6/26/2014" author="Brian A. Lakstins" description="Update for addition of StorageKey.">
 // <change date="8/21/2014" author="Brian A. Lakstins" description="Added stream methods.">
 // <change date="1/13/2015" author="Brian A. Lakstins" description="Move functionality to generic ADO provider and base this one on that one.">
+// <change date="3/31/2024" author="Brian A. Lakstins" description="Namespace and naming change to follow conventions in MaxFactry.Base">
 // </changelog>
 #endregion
 
-namespace MaxFactry.Base.DataLayer.Provider
+namespace MaxFactry.Base.DataLayer.Library.Provider
 {
     using System;
     using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace MaxFactry.Base.DataLayer.Provider
     /// <summary>
     /// Data Context used to work with Microsoft SQL databases through ADO.NET (Connection, Command, Parameter)
     /// </summary>
-    public class MaxDataContextMSSqlProvider : MaxDataContextADODbProvider
+    public class MaxDataContextLibraryMSSqlProvider : MaxDataContextLibraryADODbProvider
 	{
         public override void Initialize(string lsName, MaxIndex loConfig)
         {
@@ -76,8 +77,6 @@ namespace MaxFactry.Base.DataLayer.Provider
             DbConnection loConnection = MaxDbProviderFactoryLibrary.GetConnection(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
             if (this.IsTableFound(loData.DataModel, loConnection))
             {
-                string lsStorageKey = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loData.DataModel.StorageKey));
-                loData.Set(loData.DataModel.StorageKey, lsStorageKey);
                 string lsSql = MaxSqlGenerationLibrary.GetSelect(this.SqlProviderName, this.SqlProviderType, loData, loDataQuery, laDataNameList);
                 MaxLogLibrary.Log(new MaxLogEntryStructure("SQL", MaxEnumGroup.LogDebug, "Select [{DataStorageName}] sql [{SQL}]", loData.DataModel.DataStorageName, lsSql));
                 if (lsSql.Length > 0)
@@ -100,8 +99,14 @@ namespace MaxFactry.Base.DataLayer.Provider
                         loCommand.Connection = loConnection;
                         loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql + lsOrderSql);
 
-                        List<string> loDataKey = new List<string>(loData.DataModel.GetKeyList());
-                        object[] laDataQuery = loDataQuery.GetQuery();
+                        List<string> loDataKey = new List<string>(loData.DataModel.DataNameList);
+
+                        object[] laDataQuery = new object[0];
+                        if (null != loDataQuery)
+                        {
+                            laDataQuery = loDataQuery.GetQuery();
+                        }
+
                         foreach (string lsParameterName in loParameters)
                         {
                             object loValue = null;

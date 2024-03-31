@@ -28,11 +28,13 @@
 #region Change Log
 // <changelog>
 // <change date="7/20/2023" author="Brian A. Lakstins" description="Initial creation">
+// <change date="3/31/2024" author="Brian A. Lakstins" description="Updated for changes to dependency classes">
 // </changelog>
 #endregion
 
 namespace MaxFactry.Provider.CoreProvider
 {
+    using MaxFactry.Base.DataLayer.Library.Provider;
     using MaxFactry.Base.DataLayer.Provider;
     using MaxFactry.Core;
     using MaxFactry.Core.Provider;
@@ -86,9 +88,7 @@ namespace MaxFactry.Provider.CoreProvider
         /// <param name="loConfig">The configuration for the default repository provider.</param>
         public virtual void SetProviderConfiguration(MaxIndex loConfig)
         {
-            loConfig.Add(typeof(MaxDataContextMSSqlProvider).Name, typeof(MaxDataContextMSSqlProvider));
-            loConfig.Add(typeof(MaxDataContextHttpClientProvider).Name, typeof(MaxDataContextHttpClientProvider));
-            loConfig.Add(typeof(MaxDataContextSerialPortProvider).Name, typeof(MaxDataContextSerialPortProvider));
+            loConfig.Add(typeof(MaxDataContextLibraryMSSqlProvider).Name, typeof(MaxDataContextLibraryMSSqlProvider));
         }
 
         /// <summary>
@@ -96,16 +96,7 @@ namespace MaxFactry.Provider.CoreProvider
         /// </summary>
         public virtual void RegisterProviders()
         {
-            this.RegisterProviderSecurityLibraryCoreProvider();
             this.RegisterProviderConvertLibraryCoreProvider();
-        }
-
-        public virtual void RegisterProviderSecurityLibraryCoreProvider()
-        {
-            //// Add the MaxSecurityLibraryCoreProvider as a provider for the MaxSecurityLibrary
-            MaxSecurityLibrary.Instance.ProviderAdd(
-                typeof(MaxSecurityLibraryDefaultProvider).ToString(),
-                typeof(MaxSecurityLibraryCoreProvider));
         }
 
         public virtual void RegisterProviderConvertLibraryCoreProvider()

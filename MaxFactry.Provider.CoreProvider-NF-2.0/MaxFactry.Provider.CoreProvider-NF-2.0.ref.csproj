@@ -41,6 +41,8 @@
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataLayer\Library\Provider\MaxDataContextLibraryADODbProvider.cs" />
+    <Compile Include="DataLayer\Library\Provider\MaxDataContextLibraryMSSqlProvider.cs" />
     <Compile Include="MaxStartup.cs" />
     <Compile Include="DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs" />
     <Compile Include="DataLayer\Library\Interface\IMaxDbProviderFactoryLibraryProvider.cs" />
@@ -48,8 +50,6 @@
     <Compile Include="DataLayer\Library\MaxDbProviderFactoryLibrary.cs" />
     <Compile Include="DataLayer\Library\Provider\MaxDbCommandLibraryDefaultProvider.cs" />
     <Compile Include="DataLayer\Library\Provider\MaxDbProviderFactoriesDefaultLibraryProvider.cs" />
-    <Compile Include="DataLayer\Library\Provider\MaxDataContextLibraryADODbProvider.cs" />
-    <Compile Include="DataLayer\Library\Provider\MaxDataContextLibraryMSSqlProvider.cs" />
     <Compile Include="MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -57,14 +57,20 @@
     <None Include="MaxFactry.snk" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MaxFactry.Base">
-      <Version>1.0.24.3</Version>
-    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\MaxFactry.Base\MaxFactry.Base-NF-2.0\MaxFactry.Base-NF-2.0.ref.csproj">
+      <Project>{b4784207-457e-4c7c-bf95-f72a901ed032}</Project>
+      <Name>MaxFactry.Base-NF-2.0.ref</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MaxFactry.Core\MaxFactry.Core-NF-2.0\MaxFactry.Core-NF-2.0.csproj">
+      <Project>{27e6cf32-fd87-4ae5-afa2-fad5cb86ae0c}</Project>
+      <Name>MaxFactry.Core-NF-2.0</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -42,12 +42,6 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\DataModel\MaxDataSetDataModel.cs">
-      <Link>DataLayer\DataModel\MaxDataSetDataModel.cs</Link>
-    </Compile>
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\DataModel\MaxSerialPortDataModel.cs">
-      <Link>DataLayer\DataModel\MaxSerialPortDataModel.cs</Link>
-    </Compile>
     <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs">
       <Link>DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs</Link>
     </Compile>
@@ -60,35 +54,20 @@
     <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\MaxDbProviderFactoryLibrary.cs">
       <Link>DataLayer\Library\MaxDbProviderFactoryLibrary.cs</Link>
     </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDataContextLibraryADODbProvider.cs">
+      <Link>DataLayer\Library\Provider\MaxDataContextLibraryADODbProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDataContextLibraryMSSqlProvider.cs">
+      <Link>DataLayer\Library\Provider\MaxDataContextLibraryMSSqlProvider.cs</Link>
+    </Compile>
     <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDbCommandLibraryDefaultProvider.cs">
       <Link>DataLayer\Library\Provider\MaxDbCommandLibraryDefaultProvider.cs</Link>
     </Compile>
     <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDbProviderFactoriesDefaultLibraryProvider.cs">
       <Link>DataLayer\Library\Provider\MaxDbProviderFactoriesDefaultLibraryProvider.cs</Link>
     </Compile>
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Library\MaxDataSerialPortLibrary.cs">
-      <Link>MaxFactry.Base\DataLayer\Library\MaxDataSerialPortLibrary.cs</Link>
-    </Compile>
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextADODbProvider.cs">
-      <Link>MaxFactry.Base\Repository\Provider\MaxDataContextADODbProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextHttpClientProvider.cs">
-      <Link>MaxFactry.Base\Repository\Provider\MaxDataContextHttpClientProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextMSSqlProvider.cs">
-      <Link>MaxFactry.Base\Repository\Provider\MaxDataContextMSSqlProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextSerialPortProvider.cs">
-      <Link>MaxFactry.Base\Repository\Provider\MaxDataContextSerialPortProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Repository\Provider\MaxStorageWriteRepositoryHttpClientProvider.cs">
-      <Link>MaxFactry.Base\Repository\Provider\MaxStorageWriteRepositoryHttpClientProvider.cs</Link>
-    </Compile>
     <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs">
       <Link>MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Core\Provider\MaxSecurityLibraryCoreProvider.cs">
-      <Link>MaxFactry.Core\Provider\MaxSecurityLibraryCoreProvider.cs</Link>
     </Compile>
     <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxStartup.cs">
       <Link>MaxStartup.cs</Link>
@@ -99,9 +78,7 @@
     <None Include="MaxFactry.snk" />
     <Content Include="ReadMe.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MaxFactry.Base\DataLayer\Library\Provider\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
@@ -115,10 +92,6 @@
     <ProjectReference Include="..\..\MaxFactry.Core\MaxFactry.Core-NF-4.5.2\MaxFactry.Core-NF-4.5.2.csproj">
       <Project>{db84bcde-6f72-4657-811f-40a824ae041f}</Project>
       <Name>MaxFactry.Core-NF-4.5.2</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\MaxFactry.General\MaxFactry.General-NF-4.5.2\MaxFactry.General-NF-4.5.2.ref.csproj">
-      <Project>{a625c04c-84c7-4d75-8e53-8b37542235e0}</Project>
-      <Name>MaxFactry.General-NF-4.5.2.ref</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

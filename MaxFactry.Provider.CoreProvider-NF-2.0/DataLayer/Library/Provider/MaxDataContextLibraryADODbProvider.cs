@@ -1,4 +1,4 @@
-﻿// <copyright file="MaxDataContextADODbProvider.cs" company="Lakstins Family, LLC">
+﻿// <copyright file="MaxDataContextLibraryADODbProvider.cs" company="Lakstins Family, LLC">
 // Copyright (c) Brian A. Lakstins (http://www.lakstins.com/brian/)
 // </copyright>
 
@@ -47,10 +47,11 @@
 // <change date="6/5/2020" author="Brian A. Lakstins" description="Updated for change to base.">
 // <change date="6/11/2020" author="Brian A. Lakstins" description="Fix error when value is null.">
 // <change date="7/20/2023" author="Brian A. Lakstins" description="Use constants to access configuration names instead of strings.">
+// <change date="3/31/2024" author="Brian A. Lakstins" description="Namespace and naming change to follow conventions in MaxFactry.Base">
 // </changelog>
 #endregion
 
-namespace MaxFactry.Base.DataLayer.Provider
+namespace MaxFactry.Base.DataLayer.Library.Provider
 {
 	using System;
 	using System.Collections.Generic;
@@ -59,13 +60,14 @@ namespace MaxFactry.Base.DataLayer.Provider
     using System.IO;
     using MaxFactry.Core;
     using MaxFactry.Base.DataLayer.Library;
+    using MaxFactry.Base.DataLayer.Library.Provider;
     using MaxFactry.Provider.CoreProvider.DataLayer;
     
     /// <summary>
     /// Data Context used to work with SQL databases through ADO.NET (Connection, Command, Parameter)
     /// </summary>
-    public class MaxDataContextADODbProvider : MaxDataContextDefaultProvider
-	{
+    public class MaxDataContextLibraryADODbProvider : MaxDataContextLibraryDefaultProvider
+    {
         /// <summary>
         /// Keeps track of which databases are initialized
         /// </summary>
@@ -100,7 +102,7 @@ namespace MaxFactry.Base.DataLayer.Provider
 		/// <summary>
         /// Initializes a new instance of the MaxDataContextADODbProvider class
 		/// </summary>
-        public MaxDataContextADODbProvider()
+        public MaxDataContextLibraryADODbProvider()
 			: base()
 		{
 		}
@@ -267,23 +269,22 @@ namespace MaxFactry.Base.DataLayer.Provider
                     loCommand.Connection = loConnection;
                     loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql);
                     MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "INSERT sql [" + loCommand.CommandText + "]", "MaxDataContextADODbProvider");
-                    string[] laKey = loDataList.DataModel.GetKeyList();
-                    for (int lnK = 0; lnK < laKey.Length; lnK++)
+                    foreach (string lsDataName in loDataList.DataModel.DataNameList)
                     {
-                        bool lbIsServerId = loDataList.DataModel.GetPropertyAttributeSetting(laKey[lnK], "IsServerId");
+                        bool lbIsServerId = loDataList.DataModel.GetAttributeSetting(lsDataName, "IsServerId");
                         if (!lbIsServerId)
                         {
                             for (int lnDL = 0; lnDL < loDataList.Count; lnDL++)
                             {
-                                object loValue = loDataList[lnDL].Get(laKey[lnK]);
-                                if (null == loValue && typeof(bool).Equals(loDataList.DataModel.GetValueType(laKey[lnK])))
+                                object loValue = loDataList[lnDL].Get(lsDataName);
+                                if (null == loValue && typeof(bool).Equals(loDataList.DataModel.GetValueType(lsDataName)))
                                 {
                                     loValue = false;
                                 }
 
                                 if (null != loValue)
                                 {
-                                    string lsParameterName = MaxSqlGenerationLibrary.GetParameterName(laKey[lnK], lnDL);
+                                    string lsParameterName = MaxSqlGenerationLibrary.GetParameterName(lsDataName, lnDL);
                                     this.AddDbParameter(loValue, lsParameterName, loCommand);
                                     MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "INSERT Parameter [" + lsParameterName + "][" + loValue.ToString() + "]", "MaxDataContextADODbProvider");
                                 }
@@ -309,6 +310,11 @@ namespace MaxFactry.Base.DataLayer.Provider
                     {
                         lnR = MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
                     }
+
+                    for (int lnD = 0; lnD < loDataList.Count; lnD++)
+                    {
+                        loDataList[lnD].ClearChanged();
+                    }
                 }
                 finally
                 {
@@ -317,11 +323,6 @@ namespace MaxFactry.Base.DataLayer.Provider
                     loCommand = null;
                     loConnection.Dispose();
                     loConnection = null;
-                }
-
-                for (int lnD = 0; lnD < loDataList.Count; lnD++)
-                {
-                    loDataList[lnD].ClearChanged();
                 }
             }
 
@@ -358,6 +359,10 @@ namespace MaxFactry.Base.DataLayer.Provider
                         }
 
                         lnR = MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
+                        for (int lnD = 0; lnD < loDataList.Count; lnD++)
+                        {
+                            loDataList[lnD].ClearChanged();
+                        }
                     }
                     finally
                     {
@@ -367,11 +372,6 @@ namespace MaxFactry.Base.DataLayer.Provider
                         loConnection.Dispose();
                         loConnection = null;
                     }
-                }
-
-                for (int lnD = 0; lnD < loDataList.Count; lnD++)
-                {
-                    loDataList[lnD].ClearChanged();
                 }
             }
 
@@ -426,16 +426,15 @@ namespace MaxFactry.Base.DataLayer.Provider
         /// <param name="lsDataStorageName">Name of the data storage (table name).</param>
         /// <param name="laDataNameList">list of fields to return from select</param>
         /// <returns>List of data elements with a base data model.</returns>
-        public override MaxDataList SelectAll(string lsDataStorageName, params string[] laDataNameList)
+        public override MaxDataList SelectAll(MaxData loData, params string[] laDataNameList)
         {
-            MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "Select [" + lsDataStorageName + "] start", "MaxDataContextADODbProvider");
-            MaxDataModel loDataModel = new MaxDataModel(lsDataStorageName);
-            MaxDataList loR = new MaxDataList(loDataModel);
+            MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "Select [" + loData.DataModel.DataStorageName + "] start", "MaxDataContextADODbProvider");
+            MaxDataList loR = new MaxDataList(loData.DataModel);
             DbConnection loConnection = MaxDbProviderFactoryLibrary.GetConnection(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
-            if (this.IsTableFound(loDataModel, loConnection))
+            if (this.IsTableFound(loData.DataModel, loConnection))
             {
-                string lsSql = MaxSqlGenerationLibrary.GetSelect(this.SqlProviderName, this.SqlProviderType, lsDataStorageName, laDataNameList);
-                MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "Select [" + lsDataStorageName + "] sql [" + lsSql + "]", "MaxDataContextADODbProvider");
+                string lsSql = MaxSqlGenerationLibrary.GetSelect(this.SqlProviderName, this.SqlProviderType, loData.DataModel.DataStorageName, laDataNameList);
+                MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "Select [" + loData.DataModel.DataStorageName + "] sql [" + lsSql + "]", "MaxDataContextADODbProvider");
                 if (lsSql.Length > 0)
                 {
                     List<string> loParameters = this.GetParameterNames(lsSql);
@@ -480,8 +479,6 @@ namespace MaxFactry.Base.DataLayer.Provider
             DbConnection loConnection = MaxDbProviderFactoryLibrary.GetConnection(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
             if (this.IsTableFound(loData.DataModel, loConnection))
 			{
-                string lsStorageKey = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loData.DataModel.StorageKey));
-                loData.Set(loData.DataModel.StorageKey, lsStorageKey);
                 string lsSql = MaxSqlGenerationLibrary.GetSelect(this.SqlProviderName, this.SqlProviderType, loData, loDataQuery, laDataNameList);
                 MaxLogLibrary.Log(new MaxLogEntryStructure("SQL", MaxEnumGroup.LogDebug, "Select [{DataStorageName}] sql [{SQL}]", loData.DataModel.DataStorageName, lsSql));
                 if (lsSql.Length > 0)
@@ -493,7 +490,7 @@ namespace MaxFactry.Base.DataLayer.Provider
 						loCommand.Connection = loConnection;
                         loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql);
 
-						List<string> loDataKey = new List<string>(loData.DataModel.GetKeyList());
+						List<string> loDataKey = new List<string>(loData.DataModel.DataNameList);
                         object[] laDataQuery = loDataQuery.GetQuery();
 						foreach (string lsParameterName in loParameters)
 						{
@@ -556,8 +553,6 @@ namespace MaxFactry.Base.DataLayer.Provider
             DbConnection loConnection = MaxDbProviderFactoryLibrary.GetConnection(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
             if (this.IsTableFound(loData.DataModel, loConnection))
 			{
-                string lsStorageKey = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loData.DataModel.StorageKey));
-                loData.Set(loData.DataModel.StorageKey, lsStorageKey);
                 string lsSql = MaxSqlGenerationLibrary.GetSelectCount(this.SqlProviderName, this.SqlProviderType, loData, loDataQuery);
 				if (lsSql.Length > 0)
 				{
@@ -568,7 +563,7 @@ namespace MaxFactry.Base.DataLayer.Provider
 						loCommand.Connection = loConnection;
                         loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql);
 
-						List<string> loDataKey = new List<string>(loData.DataModel.GetKeyList());
+						List<string> loDataKey = new List<string>(loData.DataModel.DataNameList);
                         object[] laDataQuery = loDataQuery.GetQuery();
                         foreach (string lsParameterName in loParameters)
 						{
@@ -632,24 +627,24 @@ namespace MaxFactry.Base.DataLayer.Provider
             MaxFactry.Core.MaxFactryLibrary.SetValue(lsName + ":" + typeof(MaxFactry.Provider.CoreProvider.DataLayer.Provider.MaxDbProviderFactoriesDefaultLibraryProvider) + "-Config", loR);
 
             loR.Add(
-                lsName + ":" + typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextADODbProvider) + "-SqlProviderName", 
+                lsName + ":" + typeof(MaxFactry.Base.DataLayer.Library.Provider.MaxDataContextLibraryADODbProvider) + "-SqlProviderName", 
                 lsName);
             loR.Add(
-                lsName + ":" + typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextADODbProvider) + "-SqlProviderType",
+                lsName + ":" + typeof(MaxFactry.Base.DataLayer.Library.Provider.MaxDataContextLibraryADODbProvider) + "-SqlProviderType",
                 loSqlProviderType);
             loR.Add(
-                lsName + ":" + typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextADODbProvider) + "-DbCommandLibraryProviderName", 
+                lsName + ":" + typeof(MaxFactry.Base.DataLayer.Library.Provider.MaxDataContextLibraryADODbProvider) + "-DbCommandLibraryProviderName", 
                 lsName);
             loR.Add(
-                lsName + ":" + typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextADODbProvider) + "-DbProviderFactoryProviderName",
+                lsName + ":" + typeof(MaxFactry.Base.DataLayer.Library.Provider.MaxDataContextLibraryADODbProvider) + "-DbProviderFactoryProviderName",
                 lsName);
-            loR.Add(typeof(MaxFactry.Core.MaxProvider) + "-" + MaxDataContextDefaultProvider.DefaultContextProviderConfigName, "DefaultContextProvider-" + lsName);
-            loR.Add("DefaultContextProvider-" + lsName, typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextADODbProvider));
-            loR.Add(typeof(MaxFactry.Core.MaxProvider) + "-" + MaxDataContextDefaultProvider.ContextProviderConfigName, lsName);
+            loR.Add(typeof(MaxFactry.Core.MaxProvider) + "-" + MaxDataContextLibrary.DefaultContextProviderConfigName, "DefaultContextProvider-" + lsName);
+            loR.Add("DefaultContextProvider-" + lsName, typeof(MaxFactry.Base.DataLayer.Library.Provider.MaxDataContextLibraryADODbProvider));
+            loR.Add(typeof(MaxFactry.Core.MaxProvider) + "-" + MaxDataContextLibrary.ContextProviderConfigName, lsName);
 
-            MaxFactry.Core.MaxFactryLibrary.SetValue(lsName + ":" + typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextADODbProvider) + "-Config", loR);
+            MaxFactry.Core.MaxFactryLibrary.SetValue(lsName + ":" + typeof(MaxFactry.Base.DataLayer.Library.Provider.MaxDataContextLibraryADODbProvider) + "-Config", loR);
             MaxFactry.Core.MaxFactryLibrary.RemoveSingletonProvider(typeof(MaxFactry.Provider.CoreProvider.DataLayer.Provider.MaxDbProviderFactoriesDefaultLibraryProvider), lsName);
-            MaxFactry.Core.MaxFactryLibrary.RemoveSingletonProvider(typeof(MaxFactry.Base.DataLayer.Provider.MaxDataContextADODbProvider), lsName);
+            MaxFactry.Core.MaxFactryLibrary.RemoveSingletonProvider(typeof(MaxFactry.Base.DataLayer.Library.Provider.MaxDataContextLibraryADODbProvider), lsName);
 
             if (null != loRepositoryProviderType)
             {
@@ -830,7 +825,7 @@ namespace MaxFactry.Base.DataLayer.Provider
                                         DbCommand loCommandColumnList = MaxDbProviderFactoryLibrary.GetCommand(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
                                         loCommandColumnList.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSqlColumnList);
                                         loCommandColumnList.Connection = loConnection;
-                                        MaxDataList loDataList = new MaxDataList(new MaxDataModel());
+                                        MaxDataList loDataList = new MaxDataList(loDataModel);
                                         int lnColumnCount = MaxDbCommandLibrary.Fill(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommandColumnList, loDataList, 0, 0);
                                         if (lnColumnCount > 0)
                                         {

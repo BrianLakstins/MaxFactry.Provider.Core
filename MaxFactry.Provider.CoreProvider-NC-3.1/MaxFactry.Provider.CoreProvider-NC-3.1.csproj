@@ -12,37 +12,27 @@
 	  <AssemblyOriginatorKeyFile>MaxFactry.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\DataModel\MaxDataSetDataModel.cs" Link="DataLayer\DataModel\MaxDataSetDataModel.cs" />
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\DataModel\MaxSerialPortDataModel.cs" Link="DataLayer\DataModel\MaxSerialPortDataModel.cs" />
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs" Link="DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs" />
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Interface\IMaxDbProviderFactoryLibraryProvider.cs" Link="DataLayer\Library\Interface\IMaxDbProviderFactoryLibraryProvider.cs" />
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\MaxDbCommandLibrary.cs" Link="DataLayer\Library\MaxDbCommandLibrary.cs" />
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\MaxDbProviderFactoryLibrary.cs" Link="DataLayer\Library\MaxDbProviderFactoryLibrary.cs" />
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDbCommandLibraryDefaultProvider.cs" Link="DataLayer\Library\Provider\MaxDbCommandLibraryDefaultProvider.cs" />
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDbProviderFactoriesDefaultLibraryProvider.cs" Link="DataLayer\Library\Provider\MaxDbProviderFactoriesDefaultLibraryProvider.cs" />
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Library\MaxDataSerialPortLibrary.cs" Link="MaxFactry.Base\DataLayer\Library\MaxDataSerialPortLibrary.cs" />
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextADODbProvider.cs" Link="MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextADODbProvider.cs" />
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextHttpClientProvider.cs" Link="MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextHttpClientProvider.cs" />
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextMSSqlProvider.cs" Link="MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextMSSqlProvider.cs" />
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextSerialPortProvider.cs" Link="MaxFactry.Base\DataLayer\Repository\Provider\MaxDataContextSerialPortProvider.cs" />
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Repository\Provider\MaxStorageWriteRepositoryHttpClientProvider.cs" Link="MaxFactry.Base\DataLayer\Repository\Provider\MaxStorageWriteRepositoryHttpClientProvider.cs" />
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs" Link="MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs" />
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Core\Provider\MaxSecurityLibraryCoreProvider.cs" Link="MaxFactry.Core\Provider\MaxSecurityLibraryCoreProvider.cs" />
-    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxStartup.cs" Link="MaxStartup.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs" Link="DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs" />
+		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Interface\IMaxDbProviderFactoryLibraryProvider.cs" Link="DataLayer\Library\Interface\IMaxDbProviderFactoryLibraryProvider.cs" />
+		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\MaxDbCommandLibrary.cs" Link="DataLayer\Library\MaxDbCommandLibrary.cs" />
+		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\MaxDbProviderFactoryLibrary.cs" Link="DataLayer\Library\MaxDbProviderFactoryLibrary.cs" />
+		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDataContextLibraryADODbProvider.cs" Link="DataLayer\Library\Provider\MaxDataContextLibraryADODbProvider.cs" />
+		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDataContextLibraryMSSqlProvider.cs" Link="DataLayer\Library\Provider\MaxDataContextLibraryMSSqlProvider.cs" />
+		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDbCommandLibraryDefaultProvider.cs" Link="DataLayer\Library\Provider\MaxDbCommandLibraryDefaultProvider.cs" />
+		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDbProviderFactoriesDefaultLibraryProvider.cs" Link="DataLayer\Library\Provider\MaxDbProviderFactoriesDefaultLibraryProvider.cs" />
+		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs" Link="MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs" />
+		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxStartup.cs" Link="MaxStartup.cs" />
+	</ItemGroup>
 
+	<ItemGroup>
+		<Folder Include="DataLayer\Library\Interface\" />
+		<Folder Include="DataLayer\Library\Provider\" />
+		<Folder Include="MaxFactry.Core\Provider\" />
+	</ItemGroup>
+	
   <ItemGroup>
-    <Folder Include="DataLayer\DataModel\" />
-    <Folder Include="DataLayer\Library\Interface\" />
-    <Folder Include="DataLayer\Library\Provider\" />
-    <Folder Include="MaxFactry.Base\DataLayer\Library\" />
-    <Folder Include="MaxFactry.Base\DataLayer\Repository\Provider\" />
-    <Folder Include="MaxFactry.Core\Provider\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="MaxFactry.General" Version="1.0.24.1" />
+    <PackageReference Include="MaxFactry.Base" Version="1.0.24.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
     <PackageReference Include="System.Data.OleDb" Version="8.0.0" />

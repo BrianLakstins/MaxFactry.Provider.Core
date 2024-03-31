@@ -37,6 +37,7 @@
 // <change date="12/28/2019" author="Brian A. Lakstins" description="Update reader get commands so only one is run per loop.  Update data conversion so only run if does not match.">
 // <change date="1/7/2020" author="Brian A. Lakstins" description="Check for DbNull before reading.  Update data conversion to catch any exception.">
 // <change date="2/24/2020" author="Brian A. Lakstins" description="Fix issue with ignoring values that are returned that don't match defined fields.">
+// <change date="3/31/2024" author="Brian A. Lakstins" description="Updated for changes to dependency classes">
 // </changelog>
 #endregion
 
@@ -209,7 +210,7 @@ namespace MaxFactry.Provider.CoreProvider.DataLayer.Provider
 						{
 							if (lnRows >= lnStart && lnRows < lnEnd)
 							{
-								MaxData loData = new MaxData(loDataList.DataModel);
+								MaxData loDataOut = new MaxData(loDataList.DataModel);
 								for (int lnR = 0; lnR < loReader.FieldCount; lnR++)
 								{
 									if (!loRowNameIndex.ContainsKey(lnR))
@@ -308,11 +309,11 @@ namespace MaxFactry.Provider.CoreProvider.DataLayer.Provider
                                         loValue = null;
                                     }
 
-                                    loData.Set(loRowNameIndex[lnR], loValue);
+                                    loDataOut.Set(loRowNameIndex[lnR], loValue);
                                 }
 
-								loData.ClearChanged();
-								loDataList.Add(loData);
+								loDataOut.ClearChanged();
+								loDataList.Add(loDataOut);
 							}
 
                             lnRows++;

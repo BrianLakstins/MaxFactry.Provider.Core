@@ -19,9 +19,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxFactry.Core-NF-4.5.2", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxFactry.Base-NF-4.5.2.ref", "..\MaxFactry.Base\MaxFactry.Base-NF-4.5.2\MaxFactry.Base-NF-4.5.2.ref.csproj", "{2120B857-FAD6-4310-9EC8-3D958087FEE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxFactry.General-NF-4.5.2.ref", "..\MaxFactry.General\MaxFactry.General-NF-4.5.2\MaxFactry.General-NF-4.5.2.ref.csproj", "{A625C04C-84C7-4D75-8E53-8B37542235E0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxFactry.Provider.CoreProvider-NF-4.5.2.ref", "MaxFactry.Provider.CoreProvider-NF-4.5.2\MaxFactry.Provider.CoreProvider-NF-4.5.2.ref.csproj", "{3BDD898C-2CCA-4DDD-B4CA-25E1FF6535EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxFactry.Provider.CoreProvider-NF-2.0.ref", "MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Provider.CoreProvider-NF-2.0.ref.csproj", "{52B25B28-7EFF-4222-9C8F-38C558E0F0E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxFactry.Core-NF-2.0", "..\MaxFactry.Core\MaxFactry.Core-NF-2.0\MaxFactry.Core-NF-2.0.csproj", "{27E6CF32-FD87-4AE5-AFA2-FAD5CB86AE0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxFactry.Base-NF-2.0.ref", "..\MaxFactry.Base\MaxFactry.Base-NF-2.0\MaxFactry.Base-NF-2.0.ref.csproj", "{B4784207-457E-4C7C-BF95-F72A901ED032}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,14 +41,22 @@ Global
 		{2120B857-FAD6-4310-9EC8-3D958087FEE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2120B857-FAD6-4310-9EC8-3D958087FEE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2120B857-FAD6-4310-9EC8-3D958087FEE2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A625C04C-84C7-4D75-8E53-8B37542235E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A625C04C-84C7-4D75-8E53-8B37542235E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A625C04C-84C7-4D75-8E53-8B37542235E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A625C04C-84C7-4D75-8E53-8B37542235E0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3BDD898C-2CCA-4DDD-B4CA-25E1FF6535EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3BDD898C-2CCA-4DDD-B4CA-25E1FF6535EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BDD898C-2CCA-4DDD-B4CA-25E1FF6535EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BDD898C-2CCA-4DDD-B4CA-25E1FF6535EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52B25B28-7EFF-4222-9C8F-38C558E0F0E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52B25B28-7EFF-4222-9C8F-38C558E0F0E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52B25B28-7EFF-4222-9C8F-38C558E0F0E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52B25B28-7EFF-4222-9C8F-38C558E0F0E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27E6CF32-FD87-4AE5-AFA2-FAD5CB86AE0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27E6CF32-FD87-4AE5-AFA2-FAD5CB86AE0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27E6CF32-FD87-4AE5-AFA2-FAD5CB86AE0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27E6CF32-FD87-4AE5-AFA2-FAD5CB86AE0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4784207-457E-4C7C-BF95-F72A901ED032}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4784207-457E-4C7C-BF95-F72A901ED032}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4784207-457E-4C7C-BF95-F72A901ED032}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4784207-457E-4C7C-BF95-F72A901ED032}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,7 +64,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{DB84BCDE-6F72-4657-811F-40A824AE041F} = {BB2AB765-5974-4D3C-8691-1F9198B9C9C0}
 		{2120B857-FAD6-4310-9EC8-3D958087FEE2} = {BB2AB765-5974-4D3C-8691-1F9198B9C9C0}
-		{A625C04C-84C7-4D75-8E53-8B37542235E0} = {BB2AB765-5974-4D3C-8691-1F9198B9C9C0}
+		{27E6CF32-FD87-4AE5-AFA2-FAD5CB86AE0C} = {BB2AB765-5974-4D3C-8691-1F9198B9C9C0}
+		{B4784207-457E-4C7C-BF95-F72A901ED032} = {BB2AB765-5974-4D3C-8691-1F9198B9C9C0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {16F5B1F7-C4A2-41C8-9A84-0C6D5A485132}
