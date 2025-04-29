@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+	  <RootNamespace>MaxFactry.Provider.CoreProvider_NC_6._0</RootNamespace>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <Nullable>enable</Nullable>
+	  <Version>1.0.24.25</Version>
+	  <AssemblyVersion>1.0.24.25</AssemblyVersion>
+	  <FileVersion>2024.10.21.01</FileVersion>
+	  <SignAssembly>True</SignAssembly>
+	  <AssemblyOriginatorKeyFile>MaxFactry.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <DefineConstants>TRACE;netcore1;netcore2;netcore2_1;netcore3_1;netcore_6</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <DefineConstants>TRACE;netcore1;netcore2;netcore2_1;netcore3_1;netcore_6</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="DataLayer\DataModel\**" />
+    <Compile Remove="MaxFactry.Base\**" />
+    <EmbeddedResource Remove="DataLayer\DataModel\**" />
+    <EmbeddedResource Remove="MaxFactry.Base\**" />
+    <None Remove="DataLayer\DataModel\**" />
+    <None Remove="MaxFactry.Base\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs" Link="DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs" />
+	  <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Interface\IMaxDbProviderFactoryLibraryProvider.cs" Link="DataLayer\Library\Interface\IMaxDbProviderFactoryLibraryProvider.cs" />
+	  <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\MaxDbCommandLibrary.cs" Link="DataLayer\Library\MaxDbCommandLibrary.cs" />
+	  <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\MaxDbProviderFactoryLibrary.cs" Link="DataLayer\Library\MaxDbProviderFactoryLibrary.cs" />
+	  <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDataContextLibraryADODbProvider.cs" Link="DataLayer\Library\Provider\MaxDataContextLibraryADODbProvider.cs" />
+	  <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDataContextLibraryMSSqlProvider.cs" Link="DataLayer\Library\Provider\MaxDataContextLibraryMSSqlProvider.cs" />
+	  <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDbCommandLibraryDefaultProvider.cs" Link="DataLayer\Library\Provider\MaxDbCommandLibraryDefaultProvider.cs" />
+	  <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDbProviderFactoriesDefaultLibraryProvider.cs" Link="DataLayer\Library\Provider\MaxDbProviderFactoriesDefaultLibraryProvider.cs" />
+	  <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs" Link="MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs" />
+	  <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxStartup.cs" Link="MaxStartup.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <Folder Include="DataLayer\Library\Interface\" />
+	  <Folder Include="DataLayer\Library\Provider\" />
+	  <Folder Include="MaxFactry.Core\Provider\" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	  <PackageReference Include="System.Data.OleDb" Version="8.0.0" />
+	  <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+	  <PackageReference Include="System.IO.Ports" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\MaxFactry.Base\MaxFactry.Base-NC-8.0\MaxFactry.Base-NC-8.0.ref.csproj" />
+    <ProjectReference Include="..\..\MaxFactry.Core\MaxFactry.Core-NC-8.0\MaxFactry.Core-NC-8.0.csproj" />
+  </ItemGroup>
+
+</Project>
