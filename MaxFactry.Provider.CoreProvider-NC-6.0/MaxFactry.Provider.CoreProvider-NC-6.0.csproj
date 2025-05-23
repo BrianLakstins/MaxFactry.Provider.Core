@@ -26,8 +26,8 @@
 		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Interface\IMaxDbProviderFactoryLibraryProvider.cs" Link="DataLayer\Library\Interface\IMaxDbProviderFactoryLibraryProvider.cs" />
 		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\MaxDbCommandLibrary.cs" Link="DataLayer\Library\MaxDbCommandLibrary.cs" />
 		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\MaxDbProviderFactoryLibrary.cs" Link="DataLayer\Library\MaxDbProviderFactoryLibrary.cs" />
-		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDataContextLibraryADODbProvider.cs" Link="DataLayer\Library\Provider\MaxDataContextLibraryADODbProvider.cs" />
-		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDataContextLibraryMSSqlProvider.cs" Link="DataLayer\Library\Provider\MaxDataContextLibraryMSSqlProvider.cs" />
+		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Library\Provider\MaxDataContextLibraryADODbProvider.cs" Link="MaxFactry.Base\DataLayer\Library\Provider\MaxDataContextLibraryADODbProvider.cs" />
+		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Library\Provider\MaxDataContextLibraryMSSqlProvider.cs" Link="MaxFactry.Base\DataLayer\Library\Provider\MaxDataContextLibraryMSSqlProvider.cs" />
 		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDbCommandLibraryDefaultProvider.cs" Link="DataLayer\Library\Provider\MaxDbCommandLibraryDefaultProvider.cs" />
 		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDbProviderFactoriesDefaultLibraryProvider.cs" Link="DataLayer\Library\Provider\MaxDbProviderFactoriesDefaultLibraryProvider.cs" />
 		<Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs" Link="MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs" />

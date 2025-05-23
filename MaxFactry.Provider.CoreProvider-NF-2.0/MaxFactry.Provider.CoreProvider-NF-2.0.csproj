@@ -42,14 +42,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MaxStartup.cs" />
-    <Compile Include="DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs" />
+	<Compile Include="MaxFactry.Base\DataLayer\Library\Provider\MaxDataContextLibraryADODbProvider.cs" />
+	<Compile Include="MaxFactry.Base\DataLayer\Library\Provider\MaxDataContextLibraryMSSqlProvider.cs" />
+
+	 <Compile Include="DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs" />
     <Compile Include="DataLayer\Library\Interface\IMaxDbProviderFactoryLibraryProvider.cs" />
     <Compile Include="DataLayer\Library\MaxDbCommandLibrary.cs" />
     <Compile Include="DataLayer\Library\MaxDbProviderFactoryLibrary.cs" />
     <Compile Include="DataLayer\Library\Provider\MaxDbCommandLibraryDefaultProvider.cs" />
     <Compile Include="DataLayer\Library\Provider\MaxDbProviderFactoriesDefaultLibraryProvider.cs" />
-    <Compile Include="DataLayer\Library\Provider\MaxDataContextLibraryADODbProvider.cs" />
-    <Compile Include="DataLayer\Library\Provider\MaxDataContextLibraryMSSqlProvider.cs" />
     <Compile Include="MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
