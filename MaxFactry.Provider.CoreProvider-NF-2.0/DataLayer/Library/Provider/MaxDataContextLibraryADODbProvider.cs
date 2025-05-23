@@ -48,6 +48,7 @@
 // <change date="6/11/2020" author="Brian A. Lakstins" description="Fix error when value is null.">
 // <change date="7/20/2023" author="Brian A. Lakstins" description="Use constants to access configuration names instead of strings.">
 // <change date="3/31/2024" author="Brian A. Lakstins" description="Namespace and naming change to follow conventions in MaxFactry.Base">
+// <change date="5/21/2025" author="Brian A. Lakstins" description="Remove stream handling methods and integrate stream handling using StreamLibrary">
 // </changelog>
 #endregion
 
@@ -57,10 +58,8 @@ namespace MaxFactry.Base.DataLayer.Library.Provider
 	using System.Collections.Generic;
 	using System.Data;
 	using System.Data.Common;
-    using System.IO;
     using MaxFactry.Core;
     using MaxFactry.Base.DataLayer.Library;
-    using MaxFactry.Base.DataLayer.Library.Provider;
     using MaxFactry.Provider.CoreProvider.DataLayer;
     
     /// <summary>
@@ -251,181 +250,13 @@ namespace MaxFactry.Base.DataLayer.Library.Provider
             }
         }
 
-		/// <summary>
-		/// Inserts a list of data objects.
-		/// </summary>
-		/// <param name="loDataList">The list of data objects to insert.</param>
-		/// <returns>The count affected.</returns>
-		public override int Insert(MaxDataList loDataList)
-		{
-			int lnR = 0;
-            DbConnection loConnection = MaxDbProviderFactoryLibrary.GetConnection(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
-            if (this.HasTable(loDataList.DataModel, loConnection))
-            {
-                string lsSql = MaxSqlGenerationLibrary.GetInsert(this.SqlProviderName, this.SqlProviderType, loDataList);
-                DbCommand loCommand = MaxDbProviderFactoryLibrary.GetCommand(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
-                try
-                {
-                    loCommand.Connection = loConnection;
-                    loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql);
-                    MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "INSERT sql [" + loCommand.CommandText + "]", "MaxDataContextADODbProvider");
-                    foreach (string lsDataName in loDataList.DataModel.DataNameList)
-                    {
-                        bool lbIsServerId = loDataList.DataModel.GetAttributeSetting(lsDataName, "IsServerId");
-                        if (!lbIsServerId)
-                        {
-                            for (int lnDL = 0; lnDL < loDataList.Count; lnDL++)
-                            {
-                                object loValue = loDataList[lnDL].Get(lsDataName);
-                                if (null == loValue && typeof(bool).Equals(loDataList.DataModel.GetValueType(lsDataName)))
-                                {
-                                    loValue = false;
-                                }
-
-                                if (null != loValue)
-                                {
-                                    string lsParameterName = MaxSqlGenerationLibrary.GetParameterName(lsDataName, lnDL);
-                                    this.AddDbParameter(loValue, lsParameterName, loCommand);
-                                    MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "INSERT Parameter [" + lsParameterName + "][" + loValue.ToString() + "]", "MaxDataContextADODbProvider");
-                                }
-                            }
-                        }
-                    }
-
-                    if (lsSql.Contains(";SELECT "))
-                    {
-                        object loResult = MaxDbCommandLibrary.ExecuteScaler(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
-                        if (loResult is int)
-                        {
-                            lnR = (int)loResult;
-                        }
-                        else
-                        {
-                            int lnResult = 0;
-                            int.TryParse(loResult.ToString(), out lnResult);
-                            lnR = lnResult;
-                        }
-                    }
-                    else
-                    {
-                        lnR = MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
-                    }
-
-                    for (int lnD = 0; lnD < loDataList.Count; lnD++)
-                    {
-                        loDataList[lnD].ClearChanged();
-                    }
-                }
-                finally
-                {
-                    loCommand.Connection = null;
-                    loCommand.Dispose();
-                    loCommand = null;
-                    loConnection.Dispose();
-                    loConnection = null;
-                }
-            }
-
-			return lnR;
-		}
-
-		/// <summary>
-		/// Updates a list of data objects.
-		/// </summary>
-		/// <param name="loDataList">The list of data objects to insert.</param>
-		/// <returns>The count affected.</returns>
-		public override int Update(MaxDataList loDataList)
-		{
-			int lnR = 0;
-            DbConnection loConnection = MaxDbProviderFactoryLibrary.GetConnection(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
-            if (this.HasTable(loDataList.DataModel, loConnection))
-            {
-                string lsSql = MaxSqlGenerationLibrary.GetUpdate(this.SqlProviderName, this.SqlProviderType, loDataList);
-                if (lsSql.Length > 0)
-                {
-                    DbCommand loCommand = MaxDbProviderFactoryLibrary.GetCommand(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
-                    try
-                    {
-                        List<string> loParameters = this.GetParameterNames(lsSql);
-                        loCommand.Connection = loConnection;
-                        loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql);
-                        foreach (string lsParameterName in loParameters)
-                        {
-                            string[] laName = lsParameterName.Split('$');
-                            string lsKey = laName[0];
-                            int lnDL = Convert.ToInt32(laName[1]);
-                            object loValue = loDataList[lnDL].Get(lsKey);
-                            this.AddDbParameter(loValue, lsParameterName, loCommand);
-                        }
-
-                        lnR = MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
-                        for (int lnD = 0; lnD < loDataList.Count; lnD++)
-                        {
-                            loDataList[lnD].ClearChanged();
-                        }
-                    }
-                    finally
-                    {
-                        loCommand.Connection = null;
-                        loCommand.Dispose();
-                        loCommand = null;
-                        loConnection.Dispose();
-                        loConnection = null;
-                    }
-                }
-            }
-
-			return lnR;
-		}
-
-		/// <summary>
-		/// Deletes a list of data objects.
-		/// </summary>
-		/// <param name="loDataList">The list of data objects to insert.</param>
-		/// <returns>The count affected.</returns>
-		public override int Delete(MaxDataList loDataList)
-		{
-			int lnR = 0;
-            DbConnection loConnection = MaxDbProviderFactoryLibrary.GetConnection(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
-            if (this.HasTable(loDataList.DataModel, loConnection))
-			{
-                string lsSql = MaxSqlGenerationLibrary.GetDelete(this.SqlProviderName, this.SqlProviderType, loDataList);
-                DbCommand loCommand = MaxDbProviderFactoryLibrary.GetCommand(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
-				try
-				{
-					List<string> loParameters = this.GetParameterNames(lsSql);
-					loCommand.Connection = loConnection;
-                    loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql);
-					foreach (string lsParameterName in loParameters)
-					{
-						string[] laName = lsParameterName.Split('$');
-						string lsKey = laName[0];
-						int lnDL = Convert.ToInt32(laName[1]);
-                        object loValue = loDataList[lnDL].Get(lsKey);
-						this.AddDbParameter(loValue, lsParameterName, loCommand);
-					}
-
-                    lnR = MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
-				}
-				finally
-				{
-					loCommand.Connection = null;
-					loCommand.Dispose();
-					loCommand = null;
-					loConnection.Dispose();
-					loConnection = null;
-				}
-			}
-
-			return lnR;
-		}
 
         /// <summary>
-        /// Selects all data from the data storage name for the specified type.
+        /// Selects all data
         /// </summary>
-        /// <param name="lsDataStorageName">Name of the data storage (table name).</param>
-        /// <param name="laDataNameList">list of fields to return from select</param>
-        /// <returns>List of data elements with a base data model.</returns>
+        /// <param name="loData">Data to use as definition</param>
+        /// <param name="laDataNameList">Names of fields to return</param>
+        /// <returns>List of data that is stored</returns>
         public override MaxDataList SelectAll(MaxData loData, params string[] laDataNameList)
         {
             MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "Select [" + loData.DataModel.DataStorageName + "] start", "MaxDataContextADODbProvider");
@@ -439,7 +270,7 @@ namespace MaxFactry.Base.DataLayer.Library.Provider
                 {
                     List<string> loParameters = this.GetParameterNames(lsSql);
                     DbCommand loCommand = MaxDbProviderFactoryLibrary.GetCommand(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
-                    
+
                     try
                     {
                         loCommand.Connection = loConnection;
@@ -461,40 +292,39 @@ namespace MaxFactry.Base.DataLayer.Library.Provider
         }
 
         /// <summary>
-        /// Selects data from the database.
+        /// Selects data
         /// </summary>
-        /// <param name="loData">Element with data used in the filter.</param>
-        /// <param name="loDataQuery">Query information to filter results.</param>
-        /// <param name="lnPageIndex">Page to return.</param>
-        /// <param name="lnPageSize">Items per page.</param>
-        /// <param name="lsOrderBy">Sort Information.</param>
-        /// <param name="lnTotal">Total items found.</param>
-        /// <param name="laDataNameList">list of fields to return from select.</param>
-        /// <returns>List of data from select.</returns>
+        /// <param name="loData">Data to use as definition</param>
+        /// <param name="loDataQuery">Filter for the query</param>
+        /// <param name="lnPageIndex">Page number of the data</param>
+        /// <param name="lnPageSize">Size of the page</param>
+        /// <param name="lsOrderBy">Data field used to sort</param>
+        /// <param name="laDataNameList">Names of fields to return</param>
+        /// <returns>List of data that matches the query parameters</returns>
         public override MaxDataList Select(MaxData loData, MaxDataQuery loDataQuery, int lnPageIndex, int lnPageSize, string lsOrderBy, out int lnTotal, params string[] laDataNameList)
-		{
+        {
             MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "Select [" + loData.DataModel.DataStorageName + "] start", "MaxDataContextADODbProvider");
-			MaxDataList loR = new MaxDataList(loData.DataModel);
-			lnTotal = 0;
+            MaxDataList loR = new MaxDataList(loData.DataModel);
+            lnTotal = 0;
             DbConnection loConnection = MaxDbProviderFactoryLibrary.GetConnection(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
             if (this.IsTableFound(loData.DataModel, loConnection))
-			{
+            {
                 string lsSql = MaxSqlGenerationLibrary.GetSelect(this.SqlProviderName, this.SqlProviderType, loData, loDataQuery, laDataNameList);
                 MaxLogLibrary.Log(new MaxLogEntryStructure("SQL", MaxEnumGroup.LogDebug, "Select [{DataStorageName}] sql [{SQL}]", loData.DataModel.DataStorageName, lsSql));
                 if (lsSql.Length > 0)
-				{
-					List<string> loParameters = this.GetParameterNames(lsSql);
+                {
+                    List<string> loParameters = this.GetParameterNames(lsSql);
                     DbCommand loCommand = MaxDbProviderFactoryLibrary.GetCommand(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
-					try
-					{
-						loCommand.Connection = loConnection;
+                    try
+                    {
+                        loCommand.Connection = loConnection;
                         loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql);
 
-						List<string> loDataKey = new List<string>(loData.DataModel.DataNameList);
+                        List<string> loDataKey = new List<string>(loData.DataModel.DataNameList);
                         object[] laDataQuery = loDataQuery.GetQuery();
-						foreach (string lsParameterName in loParameters)
-						{
-							object loValue = null;
+                        foreach (string lsParameterName in loParameters)
+                        {
+                            object loValue = null;
                             for (int lnDQ = 0; lnDQ < laDataQuery.Length; lnDQ++)
                             {
                                 object loStatement = laDataQuery[lnDQ];
@@ -508,10 +338,10 @@ namespace MaxFactry.Base.DataLayer.Library.Provider
                                 }
                             }
 
-							if (null == loValue && loDataKey.Contains(lsParameterName))
-							{
-								loValue = loData.Get(lsParameterName);
-							}
+                            if (null == loValue && loDataKey.Contains(lsParameterName))
+                            {
+                                loValue = loData.Get(lsParameterName);
+                            }
 
                             if (null != loValue)
                             {
@@ -522,52 +352,52 @@ namespace MaxFactry.Base.DataLayer.Library.Provider
                             {
                                 MaxLogLibrary.Log(new MaxLogEntryStructure("SQLParam", MaxEnumGroup.LogDebug, "Select [{DataStorageName}] add parameter [{ParameterName}] is null", loData.DataModel.DataStorageName, lsParameterName));
                             }
-						}
+                        }
 
                         lnTotal = MaxDbCommandLibrary.Fill(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand, loR, lnPageIndex, lnPageSize);
-					}
-					finally
-					{
-						loCommand.Connection = null;
-						loCommand.Dispose();
-						loCommand = null;
-						loConnection.Dispose();
-						loConnection = null;
-					}
-				}
-			}
+                    }
+                    finally
+                    {
+                        loCommand.Connection = null;
+                        loCommand.Dispose();
+                        loCommand = null;
+                        loConnection.Dispose();
+                        loConnection = null;
+                    }
+                }
+            }
 
             MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "Select [" + loData.DataModel.DataStorageName + "] end", "MaxDataContextADODbProvider");
             return loR;
-		}
+        }
 
-		/// <summary>
-		/// Gets the number of records that match the filter.
-		/// </summary>
-		/// <param name="loData">Element with data used in the filter.</param>
-        /// <param name="loDataQuery">Query information to filter results.</param>
-        /// <returns>number of records that match.</returns>
+        /// <summary>
+        /// Selects a count of records
+        /// </summary>
+        /// <param name="loData">Data to use as definition</param>
+        /// <param name="loDataQuery">Filter for the query</param>
+        /// <returns>Count that matches the query parameters</returns>
         public override int SelectCount(MaxData loData, MaxDataQuery loDataQuery)
-		{
-			int lnR = 0;
+        {
+            int lnR = 0;
             DbConnection loConnection = MaxDbProviderFactoryLibrary.GetConnection(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
             if (this.IsTableFound(loData.DataModel, loConnection))
-			{
+            {
                 string lsSql = MaxSqlGenerationLibrary.GetSelectCount(this.SqlProviderName, this.SqlProviderType, loData, loDataQuery);
-				if (lsSql.Length > 0)
-				{
-					List<string> loParameters = this.GetParameterNames(lsSql);
+                if (lsSql.Length > 0)
+                {
+                    List<string> loParameters = this.GetParameterNames(lsSql);
                     DbCommand loCommand = MaxDbProviderFactoryLibrary.GetCommand(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
-					try
-					{
-						loCommand.Connection = loConnection;
+                    try
+                    {
+                        loCommand.Connection = loConnection;
                         loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql);
 
-						List<string> loDataKey = new List<string>(loData.DataModel.DataNameList);
+                        List<string> loDataKey = new List<string>(loData.DataModel.DataNameList);
                         object[] laDataQuery = loDataQuery.GetQuery();
                         foreach (string lsParameterName in loParameters)
-						{
-							object loValue = null;
+                        {
+                            object loValue = null;
                             for (int lnDQ = 0; lnDQ < laDataQuery.Length; lnDQ++)
                             {
                                 object loStatement = laDataQuery[lnDQ];
@@ -581,28 +411,329 @@ namespace MaxFactry.Base.DataLayer.Library.Provider
                                 }
                             }
 
-							if (null == loValue && loDataKey.Contains(lsParameterName))
-							{
-								loValue = loData.Get(lsParameterName);
-							}
+                            if (null == loValue && loDataKey.Contains(lsParameterName))
+                            {
+                                loValue = loData.Get(lsParameterName);
+                            }
 
-							if (null != loValue)
-							{
-								this.AddDbParameter(loValue, lsParameterName, loCommand);
-							}
-						}
+                            if (null != loValue)
+                            {
+                                this.AddDbParameter(loValue, lsParameterName, loCommand);
+                            }
+                        }
 
                         lnR = Convert.ToInt32(MaxDbCommandLibrary.ExecuteScaler(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand));
-					}
-					finally
-					{
-						loCommand.Connection = null;
-						loCommand.Dispose();
-						loCommand = null;
-						loConnection.Dispose();
-						loConnection = null;
-					}
-				}
+                    }
+                    finally
+                    {
+                        loCommand.Connection = null;
+                        loCommand.Dispose();
+                        loCommand = null;
+                        loConnection.Dispose();
+                        loConnection = null;
+                    }
+                }
+            }
+
+            return lnR;
+        }
+
+        /// <summary>
+        /// Inserts a new list of elements
+        /// </summary>
+        /// <param name="loDataList">The list of elements</param>
+        /// <returns>Flag based status code indicating level of success.</returns>
+        public override int Insert(MaxDataList loDataList)
+        {
+            int lnR = 0;
+            DbConnection loConnection = MaxDbProviderFactoryLibrary.GetConnection(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
+            if (this.HasTable(loDataList.DataModel, loConnection))
+            {
+                //// Determine number of parameters for MaxData item
+                for (int lnDL = 0; lnDL < loDataList.Count; lnDL++)
+                {
+                    MaxData loData = loDataList[lnDL];
+                    int lnParameterCount = 0;
+                    foreach (string lsDataName in loDataList.DataModel.DataNameList)
+                    {
+                        bool lbIsServerId = loDataList.DataModel.GetAttributeSetting(lsDataName, "IsServerId");
+                        if (!lbIsServerId)
+                        {
+                            object loValue = loData.Get(lsDataName);
+                            if (null == loValue && typeof(bool).Equals(loDataList.DataModel.GetValueType(lsDataName)))
+                            {
+                                loValue = false;
+                            }
+
+                            if (null != loValue)
+                            {
+                                lnParameterCount++;
+                            }
+                        }
+                    }
+
+                    loData.Set("_ParameterCount", lnParameterCount);
+                }
+
+                DbCommand loCommand = MaxDbProviderFactoryLibrary.GetCommand(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
+                try
+                {
+                    loCommand.Connection = loConnection;
+                    MaxDataList loDataInsertList = new MaxDataList(loDataList.DataModel);
+                    for (int lnDL = 0; lnDL < loDataList.Count && lnR == 0; lnDL++)
+                    {
+                        MaxData loData = loDataList[lnDL];
+                        foreach (string lsDataName in loData.DataModel.DataNameStreamList)
+                        {
+                            int lnReturn = MaxStreamLibrary.StreamSave(loData, lsDataName);
+                            if ((lnReturn & 1) != 0)
+                            {
+                                lnR |= 2; //// Error saving stream
+                            }
+                        }
+
+                        if (lnR == 0)
+                        {
+                            int lnBatchParameterCount = MaxConvertLibrary.ConvertToInt(typeof(int), loData.Get("_ParameterCount"));
+                            if (loCommand.Parameters.Count + lnBatchParameterCount >= this._nMaxParameterCount)
+                            {
+                                string lsSqlBatch = MaxSqlGenerationLibrary.GetInsert(this.SqlProviderName, this.SqlProviderType, loDataInsertList);
+                                loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSqlBatch);
+                                MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "INSERT sql [" + loCommand.CommandText + "] with [" + loCommand.Parameters.Count.ToString() + "] parameters", "MaxDataContextADODbProvider");
+                                int lnCount = MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
+                                if (lnCount == loDataInsertList.Count)
+                                {
+                                    loCommand.Parameters.Clear();
+                                    for (int lnDI = 0; lnDI < loDataInsertList.Count; lnDI++)
+                                    {
+                                        loDataInsertList[lnDI].ClearChanged();
+                                    }
+
+                                    loDataInsertList = new MaxDataList(loDataList.DataModel);
+                                }
+                                else
+                                {
+                                    MaxLogLibrary.Log(MaxEnumGroup.LogError, "INSERT sql [" + loCommand.CommandText + "] with [" + loCommand.Parameters.Count.ToString() + "] parameters failed to insert all records", "MaxDataContextADODbProvider");
+                                    lnR |= 4; //// Error inserting records
+                                }
+                            }
+
+                            loDataInsertList.Add(loData);
+                            foreach (string lsDataName in loDataList.DataModel.DataNameList)
+                            {
+                                bool lbIsServerId = loDataList.DataModel.GetAttributeSetting(lsDataName, "IsServerId");
+                                if (!lbIsServerId)
+                                {
+                                    object loValue = loData.Get(lsDataName);
+                                    if (null == loValue && typeof(bool).Equals(loDataList.DataModel.GetValueType(lsDataName)))
+                                    {
+                                        loValue = false;
+                                    }
+
+                                    if (null != loValue)
+                                    {
+                                        string lsParameterName = MaxSqlGenerationLibrary.GetParameterName(lsDataName, loDataInsertList.Count - 1);
+                                        this.AddDbParameter(loValue, lsParameterName, loCommand);
+                                        MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "INSERT Parameter [" + lsParameterName + "][" + loValue.ToString() + "]", "MaxDataContextADODbProvider");
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (lnR == 0)
+                    {
+                        string lsSql = MaxSqlGenerationLibrary.GetInsert(this.SqlProviderName, this.SqlProviderType, loDataInsertList);
+                        loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql);
+                        MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "INSERT sql [" + loCommand.CommandText + "] with [" + loCommand.Parameters.Count.ToString() + "] parameters", "MaxDataContextADODbProvider");
+                        if (lsSql.Contains(";SELECT "))
+                        {
+                            object loResult = MaxDbCommandLibrary.ExecuteScaler(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
+                            if (loResult is int)
+                            {
+                                lnR = (int)loResult;
+                            }
+                            else
+                            {
+                                int lnResult = 0;
+                                if (int.TryParse(loResult.ToString(), out lnResult))
+                                {
+                                    lnR = lnResult;
+                                }
+                            }
+
+                            for (int lnD = 0; lnD < loDataList.Count; lnD++)
+                            {
+                                loDataList[lnD].ClearChanged();
+                            }
+                        }
+                        else
+                        {
+                            int lnCount = MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
+                            if (lnCount == loDataInsertList.Count)
+                            {
+                                loCommand.Parameters.Clear();
+                                for (int lnDI = 0; lnDI < loDataInsertList.Count; lnDI++)
+                                {
+                                    loDataInsertList[lnDI].ClearChanged();
+                                }
+                            }
+                            else
+                            {
+                                MaxLogLibrary.Log(MaxEnumGroup.LogError, "INSERT sql [" + loCommand.CommandText + "] with [" + loCommand.Parameters.Count.ToString() + "] parameters failed to insert all records", "MaxDataContextADODbProvider");
+                                lnR |= 4; //// Error inserting records
+                            }
+                        }
+                    }
+                }
+                catch (Exception loE)
+                {
+                    MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Exception inserting {Count} data elements", loE, loDataList.Count));
+                    lnR |= 1; //// Exception inserting
+                }
+                finally
+                {
+                    loCommand.Connection = null;
+                    loCommand.Dispose();
+                    loCommand = null;
+                    loConnection.Dispose();
+                    loConnection = null;
+                }
+            }
+
+            return lnR;
+        }
+
+        /// <summary>
+        /// Updates a list of elements
+        /// </summary>
+        /// <param name="loDataList">The list of elements</param>
+        /// <returns>Flag based status code indicating level of success.</returns>
+        public override int Update(MaxDataList loDataList)
+		{
+			int lnR = 0;
+            DbConnection loConnection = MaxDbProviderFactoryLibrary.GetConnection(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
+            if (this.HasTable(loDataList.DataModel, loConnection))
+            {
+                //// Process all stream updates first
+                for (int lnDL = 0; lnDL < loDataList.Count && lnR == 0; lnDL++)
+                {
+                    MaxData loData = loDataList[lnDL];
+                    foreach (string lsDataName in loData.DataModel.DataNameStreamList)
+                    {
+                        int lnReturn = MaxStreamLibrary.StreamSave(loData, lsDataName);
+                        if ((lnReturn & 1) != 0)
+                        {
+                            //// Only consider it an error if there was an exception
+                            lnR |= 2; //// Error saving stream
+                        }
+                    }
+                }
+
+                if (lnR == 0)
+                {
+                    string lsSql = MaxSqlGenerationLibrary.GetUpdate(this.SqlProviderName, this.SqlProviderType, loDataList);
+                    if (lsSql.Length > 0)
+                    {
+                        DbCommand loCommand = MaxDbProviderFactoryLibrary.GetCommand(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
+                        try
+                        {
+                            List<string> loParameters = this.GetParameterNames(lsSql);
+                            loCommand.Connection = loConnection;
+                            loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql);
+                            foreach (string lsParameterName in loParameters)
+                            {
+                                string[] laName = lsParameterName.Split('$');
+                                string lsKey = laName[0];
+                                int lnDL = Convert.ToInt32(laName[1]);
+                                object loValue = loDataList[lnDL].Get(lsKey);
+                                this.AddDbParameter(loValue, lsParameterName, loCommand);
+                            }
+
+                            lnR = MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
+                            for (int lnD = 0; lnD < loDataList.Count; lnD++)
+                            {
+                                loDataList[lnD].ClearChanged();
+                            }
+                        }
+                        catch (Exception loE)
+                        {
+                            MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Update", MaxEnumGroup.LogError, "Exception updating {Count} data elements", loE, loDataList.Count));
+                            lnR |= 1; //// Exception updating
+                        }
+                        finally
+                        {
+                            loCommand.Connection = null;
+                            loCommand.Dispose();
+                            loCommand = null;
+                            loConnection.Dispose();
+                            loConnection = null;
+                        }
+                    }
+                }
+            }
+
+			return lnR;
+		}
+
+        /// <summary>
+        /// Deletes a list of elements
+        /// </summary>
+        /// <param name="loDataList">The list of elements</param>
+        /// <returns>Flag based status code indicating level of success.</returns>
+		public override int Delete(MaxDataList loDataList)
+		{
+			int lnR = 0;
+            DbConnection loConnection = MaxDbProviderFactoryLibrary.GetConnection(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
+            if (this.HasTable(loDataList.DataModel, loConnection))
+			{
+                for (int lnD = 0; lnD < loDataList.Count; lnD++)
+                {
+                    MaxData loData = loDataList[lnD];
+                    foreach (string lsDataName in loData.DataModel.DataNameStreamList)
+                    {
+                        int lnReturn = MaxStreamLibrary.StreamDelete(loData, lsDataName);
+                        if ((lnReturn & 1) != 0 && (lnR & 2) != 0)
+                        {
+                            lnR |= 2; //// Error deleting stream
+                        }
+                    }
+                }
+
+                if (lnR == 0)
+                {
+                    string lsSql = MaxSqlGenerationLibrary.GetDelete(this.SqlProviderName, this.SqlProviderType, loDataList);
+                    DbCommand loCommand = MaxDbProviderFactoryLibrary.GetCommand(this.DbProviderFactoryProviderName, this.DbProviderFactoryProviderType);
+                    try
+                    {
+                        List<string> loParameters = this.GetParameterNames(lsSql);
+                        loCommand.Connection = loConnection;
+                        loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql);
+                        foreach (string lsParameterName in loParameters)
+                        {
+                            string[] laName = lsParameterName.Split('$');
+                            string lsKey = laName[0];
+                            int lnDL = Convert.ToInt32(laName[1]);
+                            object loValue = loDataList[lnDL].Get(lsKey);
+                            this.AddDbParameter(loValue, lsParameterName, loCommand);
+                        }
+
+                        lnR = MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
+                    }
+                    catch (Exception loE)
+                    {
+                        MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Delete", MaxEnumGroup.LogError, "Exception deleting {Count} data elements", loE, loDataList.Count));
+                        lnR |= 1; //// Exception deleting
+                    }
+                    finally
+                    {
+                        loCommand.Connection = null;
+                        loCommand.Dispose();
+                        loCommand = null;
+                        loConnection.Dispose();
+                        loConnection = null;
+                    }
+                }
 			}
 
 			return lnR;

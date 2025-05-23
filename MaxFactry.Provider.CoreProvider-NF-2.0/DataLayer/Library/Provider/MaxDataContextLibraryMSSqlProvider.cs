@@ -34,6 +34,7 @@
 // <change date="8/21/2014" author="Brian A. Lakstins" description="Added stream methods.">
 // <change date="1/13/2015" author="Brian A. Lakstins" description="Move functionality to generic ADO provider and base this one on that one.">
 // <change date="3/31/2024" author="Brian A. Lakstins" description="Namespace and naming change to follow conventions in MaxFactry.Base">
+// <change date="5/23/2025" author="Brian A. Lakstins" description="Add setting MaxParameterCount and update comments for consistency">
 // </changelog>
 #endregion
 
@@ -55,20 +56,20 @@ namespace MaxFactry.Base.DataLayer.Library.Provider
 	{
         public override void Initialize(string lsName, MaxIndex loConfig)
         {
+            this._nMaxParameterCount = 2000;
             base.Initialize(lsName, loConfig);
         }
 
         /// <summary>
-        /// Selects data from the database.
+        /// Selects data
         /// </summary>
-        /// <param name="loData">Element with data used in the filter.</param>
-        /// <param name="loDataQuery">Query information to filter results.</param>
-        /// <param name="lnPageIndex">Page to return.</param>
-        /// <param name="lnPageSize">Items per page.</param>
-        /// <param name="lsOrderBy">Sort Information.</param>
-        /// <param name="lnTotal">Total items found.</param>
-        /// <param name="laDataNameList">list of fields to return from select.</param>
-        /// <returns>List of data from select.</returns>
+        /// <param name="loData">Data to use as definition</param>
+        /// <param name="loDataQuery">Filter for the query</param>
+        /// <param name="lnPageIndex">Page number of the data</param>
+        /// <param name="lnPageSize">Size of the page</param>
+        /// <param name="lsOrderBy">Data field used to sort</param>
+        /// <param name="laDataNameList">Names of fields to return</param>
+        /// <returns>List of data that matches the query parameters</returns>
         public override MaxDataList Select(MaxData loData, MaxDataQuery loDataQuery, int lnPageIndex, int lnPageSize, string lsOrderBy, out int lnTotal, params string[] laDataNameList)
         {
             MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "Select [" + loData.DataModel.DataStorageName + "] start", "MaxDataContextADODbProvider");
@@ -163,6 +164,5 @@ namespace MaxFactry.Base.DataLayer.Library.Provider
             MaxLogLibrary.Log(MaxEnumGroup.LogDebug, "Select [" + loData.DataModel.DataStorageName + "] end", "MaxDataContextADODbProvider");
             return loR;
         }
-
     }
 }
