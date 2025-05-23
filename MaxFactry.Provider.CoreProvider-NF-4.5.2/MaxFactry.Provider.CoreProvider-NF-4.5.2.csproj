@@ -58,15 +58,15 @@
       <Link>DataLayer\Library\Provider\MaxDbCommandLibraryDefaultProvider.cs</Link>
     </Compile>
     <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Provider\MaxDbProviderFactoriesDefaultLibraryProvider.cs">
-      <Link>DataLayer\Library\Provider\MaxDbProviderFactoriesDefaultLibraryProvider.cs</Link>		
+      <Link>DataLayer\Library\Provider\MaxDbProviderFactoriesDefaultLibraryProvider.cs</Link>
     </Compile>
-	  <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Library\Provider\MaxDataContextLibraryADODbProvider.cs">
-		  <Link>MaxFactry.Base\DataLayer\Library\Provider\MaxDataContextLibraryADODbProvider.cs</Link>
-	  </Compile>
-	  <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Library\Provider\MaxDataContextLibraryMSSqlProvider.cs">
-		  <Link>MaxFactry.Base\DataLayer\Library\Provider\MaxDataContextLibraryMSSqlProvider.cs</Link>
-	  </Compile>
-	  <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs">
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Library\Provider\MaxDataContextLibraryADODbProvider.cs">
+      <Link>MaxFactry.Base\DataLayer\Library\Provider\MaxDataContextLibraryADODbProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Base\DataLayer\Library\Provider\MaxDataContextLibraryMSSqlProvider.cs">
+      <Link>MaxFactry.Base\DataLayer\Library\Provider\MaxDataContextLibraryMSSqlProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs">
       <Link>MaxFactry.Core\Provider\MaxConvertLibraryCoreProvider.cs</Link>
     </Compile>
     <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\MaxStartup.cs">
@@ -81,7 +81,7 @@
   <ItemGroup />
   <ItemGroup>
     <PackageReference Include="MaxFactry.Base">
-      <Version>1.0.24.25</Version>
+      <Version>1.0.24.44</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
