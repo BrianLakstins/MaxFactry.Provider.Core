@@ -50,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <PackageReference Include="MaxFactry.Base" Version="1.0.24.44" />
+	  <PackageReference Include="MaxFactry.Base" Version="1.0.24.50" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	  <PackageReference Include="System.Data.OleDb" Version="8.0.0" />
 	  <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
