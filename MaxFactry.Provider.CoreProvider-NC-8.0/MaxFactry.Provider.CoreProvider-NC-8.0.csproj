@@ -52,9 +52,9 @@
   <ItemGroup>
 	  <PackageReference Include="MaxFactry.Base" Version="1.0.24.50" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-	  <PackageReference Include="System.Data.OleDb" Version="8.0.0" />
-	  <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
-	  <PackageReference Include="System.IO.Ports" Version="8.0.0" />
+	  <PackageReference Include="System.Data.OleDb" Version="9.0.5" />
+	  <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
+	  <PackageReference Include="System.IO.Ports" Version="9.0.5" />
   </ItemGroup>
 
 </Project>
