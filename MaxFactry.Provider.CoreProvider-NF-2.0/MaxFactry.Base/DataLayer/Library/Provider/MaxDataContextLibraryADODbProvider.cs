@@ -49,6 +49,7 @@
 // <change date="7/20/2023" author="Brian A. Lakstins" description="Use constants to access configuration names instead of strings.">
 // <change date="3/31/2024" author="Brian A. Lakstins" description="Namespace and naming change to follow conventions in MaxFactry.Base">
 // <change date="5/21/2025" author="Brian A. Lakstins" description="Remove stream handling methods and integrate stream handling using StreamLibrary">
+// <change date="6/12/2025" author="Brian A. Lakstins" description="Add Cache Expiration">
 // </changelog>
 #endregion
 
@@ -948,7 +949,7 @@ namespace MaxFactry.Base.DataLayer.Library.Provider
                                 if (lnCount > 0)
                                 {
                                     lbR = true;
-                                    MaxCacheRepository.Set(typeof(object), "_IsTableFound" + lsTableKey, "Table Found");
+                                    MaxCacheRepository.Set(typeof(object), "_IsTableFound" + lsTableKey, "Table Found", DateTime.UtcNow.AddDays(1));
                                     //// Check to make sure table columns matches DataModel columns.  Add any that don't exist.
                                     string lsSqlColumnList = MaxSqlGenerationLibrary.GetColumnList(this.SqlProviderName, this.SqlProviderType, loDataModel.DataStorageName);
                                     if (!string.IsNullOrEmpty(lsSqlColumnList))
@@ -1061,13 +1062,13 @@ namespace MaxFactry.Base.DataLayer.Library.Provider
                             loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql);
                             loCommand.Connection = loConnection;
                             MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
-                            MaxCacheRepository.Set(typeof(object), "_IsTableFound" + lsTableKey, "Table Created");
+                            MaxCacheRepository.Set(typeof(object), "_IsTableFound" + lsTableKey, "Table Created", DateTime.UtcNow.AddDays(1));
                         }
                         catch (Exception loE)
                         {
                             //// Assume it exists, but we cannot tell.
                             //// Errors will occur when the table is accessed.
-                            MaxCacheRepository.Set(typeof(object), "_IsTableFound" + lsTableKey, "Table creation failed");
+                            MaxCacheRepository.Set(typeof(object), "_IsTableFound" + lsTableKey, "Table creation failed", DateTime.UtcNow.AddDays(1));
                             MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "CreateTable", MaxEnumGroup.LogError, "Exception creating table for {DataStorageName} using ConnectionString {ConnectionString}", loE, loDataModel.DataStorageName, loConnection.ConnectionString));
                             //MaxExceptionLibrary.LogException("Error creating table [" + loDataModel.DataStorageName + "] on connection [" + loConnection.ConnectionString + "]", loE);
                         }
