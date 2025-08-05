@@ -2,7 +2,7 @@
 <package  xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>    
     <id>MaxFactry.Provider.Core</id>
-    <version>1.0.24.68</version>
+    <version>1.0.24.69</version>
     <title>MaxFactry Provider Core</title>
     <authors>Brian Lakstins</authors>
     <owners>brianlakstins</owners>
@@ -38,26 +38,27 @@
 			  <dependency id="MaxFactry.Core" version="1.0.24.68" />
 			  <dependency id="MaxFactry.Base" version="1.0.24.64" />
 			  <dependency id="Newtonsoft.Json" version="13.0.3" />
-			  <dependency id="System.Configuration.ConfigurationManager" version="8.0.0" />
-			  <dependency id="System.Data.OleDb" version="8.0.0" />
-			  <dependency id="System.Data.SqlClient" version="4.8.6" />
-			  <dependency id="System.IO.Ports" version="8.0.0" />
+			  <dependency id="System.Configuration.ConfigurationManager" version="9.0.8" />
+			  <dependency id="System.Data.OleDb" version="9.0.8" />
+			  <dependency id="System.Data.SqlClient" version="4.9.0" />
+			  <dependency id="System.IO.Ports" version="9.0.8" />
 		  </group>
 		  <group targetFramework="net6.0">
 			  <dependency id="MaxFactry.Core" version="1.0.24.68" />
 			  <dependency id="MaxFactry.Base" version="1.0.24.64" />
 			  <dependency id="Newtonsoft.Json" version="13.0.3" />
-			  <dependency id="System.Data.OleDb" version="8.0.0" />
-			  <dependency id="System.Data.SqlClient" version="4.8.6" />
-			  <dependency id="System.IO.Ports" version="8.0.0" />
+			  <dependency id="System.Configuration.ConfigurationManager" version="9.0.8" />
+			  <dependency id="System.Data.OleDb" version="9.0.8" />
+			  <dependency id="System.Data.SqlClient" version="4.9.0" />
+			  <dependency id="System.IO.Ports" version="9.0.8" />
 		  </group>
 		  <group targetFramework="net8.0">
 			  <dependency id="MaxFactry.Core" version="1.0.24.68" />
 			  <dependency id="MaxFactry.Base" version="1.0.24.64" />
 			  <dependency id="Newtonsoft.Json" version="13.0.3" />
-			  <dependency id="System.Data.OleDb" version="8.0.0" />
-			  <dependency id="System.Data.SqlClient" version="4.8.6" />
-			  <dependency id="System.IO.Ports" version="8.0.0" />
+			  <dependency id="System.Data.OleDb" version="9.0.8" />
+			  <dependency id="System.Data.SqlClient" version="4.9.0" />
+			  <dependency id="System.IO.Ports" version="9.0.8" />
 		  </group>
 	  </dependencies>
 	<summary>MaxFactry Core Provider supports the MaxFactry Framework</summary>
