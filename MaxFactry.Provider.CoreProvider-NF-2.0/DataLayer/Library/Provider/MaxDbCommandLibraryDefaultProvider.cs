@@ -50,11 +50,12 @@ namespace MaxFactry.Provider.CoreProvider.DataLayer.Provider
 	using System.Data.Common;
     using MaxFactry.Core;
     using MaxFactry.Base.DataLayer;
+    using System.Diagnostics;
 
-	/// <summary>
-	/// Provider used to execute ADO.NET DbCommand objects.  
-	/// </summary>
-	public class MaxDbCommandLibraryDefaultProvider : MaxProvider, IMaxDbCommandLibraryProvider
+    /// <summary>
+    /// Provider used to execute ADO.NET DbCommand objects.  
+    /// </summary>
+    public class MaxDbCommandLibraryDefaultProvider : MaxProvider, IMaxDbCommandLibraryProvider
 	{
         /// <summary>
         /// Initializes the provider
@@ -189,7 +190,12 @@ namespace MaxFactry.Provider.CoreProvider.DataLayer.Provider
 		/// <returns>Total number of records.</returns>
 		public int Fill(DbCommand loCommand, MaxDataList loDataList, int lnPageIndex, int lnPageSize)
 		{
-			int lnRows = 0;
+			Stopwatch loWatchRead = new Stopwatch();
+			Stopwatch loWatchSet = new Stopwatch();
+			Stopwatch loWatchAdd = new Stopwatch();
+            Stopwatch loWatchTotal = new Stopwatch();
+			loWatchTotal.Start();
+            int lnRows = 0;
 			int lnStart = 0;
 			int lnEnd = int.MaxValue;
 			if (lnPageSize > 0 && lnPageIndex > 0)
@@ -213,7 +219,7 @@ namespace MaxFactry.Provider.CoreProvider.DataLayer.Provider
 								MaxData loDataOut = new MaxData(loDataList.DataModel);
 								for (int lnR = 0; lnR < loReader.FieldCount; lnR++)
 								{
-									if (!loRowNameIndex.ContainsKey(lnR))
+                                    if (!loRowNameIndex.ContainsKey(lnR))
 									{
 										loRowNameIndex.Add(lnR, loReader.GetName(lnR));
 									}
@@ -232,6 +238,7 @@ namespace MaxFactry.Provider.CoreProvider.DataLayer.Provider
                                             {
                                                 try
                                                 {
+                                                    loWatchRead.Start();
                                                     if (loTypeCurrent == typeof(DateTime))
                                                     {
                                                         loValue = new DateTime(loReader.GetDateTime(lnR).Ticks, DateTimeKind.Utc);
@@ -248,6 +255,7 @@ namespace MaxFactry.Provider.CoreProvider.DataLayer.Provider
                                                     {
                                                         loValue = loReader.GetValue(lnR);
                                                     }
+                                                    loWatchRead.Stop();
                                                 }
                                                 catch (Exception loEReader)
                                                 {
@@ -289,7 +297,9 @@ namespace MaxFactry.Provider.CoreProvider.DataLayer.Provider
                                         }
                                         else
                                         {
+                                            loWatchRead.Start();
                                             loValue = loReader.GetValue(lnR);
+                                            loWatchRead.Stop();
                                         }
                                     }
                                     catch (Exception loE)
@@ -309,12 +319,15 @@ namespace MaxFactry.Provider.CoreProvider.DataLayer.Provider
                                         loValue = null;
                                     }
 
-                                    loDataOut.Set(loRowNameIndex[lnR], loValue);
+                                    loWatchSet.Start();
+                                    loDataOut.SetInitial(loRowNameIndex[lnR], loValue);
+									loWatchSet.Stop();
                                 }
-
-								loDataOut.ClearChanged();
-								loDataList.Add(loDataOut);
-							}
+                                
+                                loWatchAdd.Start();
+                                loDataList.Add(loDataOut);
+								loWatchAdd.Stop();
+                            }
 
                             lnRows++;
 						}
@@ -335,7 +348,8 @@ namespace MaxFactry.Provider.CoreProvider.DataLayer.Provider
 				}
 			}
 
-			return lnRows;
+			loWatchTotal.Stop();
+            return lnRows;
 		}
 
 		/// <summary>

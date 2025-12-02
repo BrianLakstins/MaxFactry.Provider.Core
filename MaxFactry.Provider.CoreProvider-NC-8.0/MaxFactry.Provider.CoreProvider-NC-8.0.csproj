@@ -14,21 +14,12 @@
 
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <DefineConstants>TRACE;netcore1;netcore2;netcore2_1;netcore3_1;netcore_6</DefineConstants>
+	  <DefineConstants>TRACE;netcore1;netcore2;netcore2_1;netcore3_1;netcore_6;netcore_8</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <DefineConstants>TRACE;netcore1;netcore2;netcore2_1;netcore3_1;netcore_6</DefineConstants>
+	  <DefineConstants>TRACE;netcore1;netcore2;netcore2_1;netcore3_1;netcore_6;netcore_8</DefineConstants>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="DataLayer\DataModel\**" />
-    <Compile Remove="MaxFactry.Base\**" />
-    <EmbeddedResource Remove="DataLayer\DataModel\**" />
-    <EmbeddedResource Remove="MaxFactry.Base\**" />
-    <None Remove="DataLayer\DataModel\**" />
-    <None Remove="MaxFactry.Base\**" />
-  </ItemGroup>
 
   <ItemGroup>
 	  <Compile Include="..\MaxFactry.Provider.CoreProvider-NF-2.0\DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs" Link="DataLayer\Library\Interface\IMaxDbCommandLibraryProvider.cs" />
@@ -50,8 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <PackageReference Include="MaxFactry.Base" Version="1.0.24.64" />
-	  <PackageReference Include="MaxFactry.Core" Version="1.0.24.68" />
+	  <PackageReference Include="MaxFactry.Base" Version="1.0.24.86" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	  <PackageReference Include="System.Data.OleDb" Version="9.0.8" />
 	  <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
