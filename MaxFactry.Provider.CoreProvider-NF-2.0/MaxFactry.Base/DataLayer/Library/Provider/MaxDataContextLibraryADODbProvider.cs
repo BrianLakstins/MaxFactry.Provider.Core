@@ -51,6 +51,7 @@
 // <change date="5/21/2025" author="Brian A. Lakstins" description="Remove stream handling methods and integrate stream handling using StreamLibrary">
 // <change date="6/12/2025" author="Brian A. Lakstins" description="Add Cache Expiration">
 // <change date="6/12/2025" author="Brian A. Lakstins" description="Fix issue with Count being returned as part of Return code">
+// <change date="12/23/2025" author="Brian A. Lakstins" description="Add ability to do select sql statements">
 // </changelog>
 #endregion
 
@@ -936,7 +937,7 @@ namespace MaxFactry.Base.DataLayer.Library.Provider
         {
             this.Initialize();
             bool lbR = true;
-            if (!loDataModel.DataStorageName.Contains("_View"))
+            if (!loDataModel.DataStorageName.ToLower().EndsWith("_view") && !loDataModel.DataStorageName.ToLower().StartsWith("select "))
             {
                 string lsTableKey = this.GetHasTableKey(loDataModel, loConnection);
                 string lsHasTable = MaxCacheRepository.Get(typeof(object), "_IsTableFound" + lsTableKey, typeof(string)) as string;
