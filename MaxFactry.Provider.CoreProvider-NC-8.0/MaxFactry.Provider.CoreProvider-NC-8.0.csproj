@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <PackageReference Include="MaxFactry.Base" Version="1.0.24.86" />
+	  <PackageReference Include="MaxFactry.Base" Version="1.0.26.1" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	  <PackageReference Include="System.Data.OleDb" Version="9.0.8" />
 	  <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />

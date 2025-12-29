@@ -81,10 +81,10 @@
   <ItemGroup />
   <ItemGroup>
     <PackageReference Include="MaxFactry.Base">
-      <Version>1.0.24.86</Version>
+      <Version>1.0.26.1</Version>
     </PackageReference>
     <PackageReference Include="MaxFactry.Core">
-      <Version>1.0.24.86</Version>
+      <Version>1.0.26.1</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
