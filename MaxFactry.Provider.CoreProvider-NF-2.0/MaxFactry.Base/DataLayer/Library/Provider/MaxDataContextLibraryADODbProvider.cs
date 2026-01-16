@@ -52,6 +52,7 @@
 // <change date="6/12/2025" author="Brian A. Lakstins" description="Add Cache Expiration">
 // <change date="6/12/2025" author="Brian A. Lakstins" description="Fix issue with Count being returned as part of Return code">
 // <change date="12/23/2025" author="Brian A. Lakstins" description="Add ability to do select sql statements">
+// <change date="1/16/2026" author="Brian A. Lakstins" description="Handle DDL command returns on Insert">
 // </changelog>
 #endregion
 
@@ -573,7 +574,8 @@ namespace MaxFactry.Base.DataLayer.Library.Provider
                         else
                         {
                             int lnCount = MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
-                            if (lnCount == loDataInsertList.Count)
+                            //// DDL Commands return -1.  Use Insert process for DDL Commands.  Other insert commands should return number of rows inserted which should match the datalist
+                            if (lnCount == -1 || lnCount == loDataInsertList.Count)
                             {
                                 loCommand.Parameters.Clear();
                                 for (int lnDI = 0; lnDI < loDataInsertList.Count; lnDI++)
@@ -1074,9 +1076,13 @@ namespace MaxFactry.Base.DataLayer.Library.Provider
                         try
                         {
                             string lsSql = MaxSqlGenerationLibrary.GetTableCreate(this.SqlProviderName, this.SqlProviderType, loDataModel);
-                            loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql);
-                            loCommand.Connection = loConnection;
-                            MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
+                            if (!string.IsNullOrEmpty(lsSql))
+                            {
+                                loCommand.CommandText = MaxSqlGenerationLibrary.GetCommandText(this.SqlProviderName, this.SqlProviderType, lsSql);
+                                loCommand.Connection = loConnection;
+                                MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
+                            }
+
                             MaxCacheRepository.Set(typeof(object), "_IsTableFound" + lsTableKey, "Table Created", DateTime.UtcNow.AddDays(1));
                         }
                         catch (Exception loE)
