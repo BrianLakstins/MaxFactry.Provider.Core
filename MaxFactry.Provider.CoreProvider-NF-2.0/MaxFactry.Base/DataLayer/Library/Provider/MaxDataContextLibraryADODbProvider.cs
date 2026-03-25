@@ -53,6 +53,7 @@
 // <change date="6/12/2025" author="Brian A. Lakstins" description="Fix issue with Count being returned as part of Return code">
 // <change date="12/23/2025" author="Brian A. Lakstins" description="Add ability to do select sql statements">
 // <change date="1/16/2026" author="Brian A. Lakstins" description="Handle DDL command returns on Insert">
+// <change date="3/256/2026" author="Brian A. Lakstins" description="Add more detailed to error logging">
 // </changelog>
 #endregion
 
@@ -658,7 +659,7 @@ namespace MaxFactry.Base.DataLayer.Library.Provider
                             int lnCount = MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
                             if (lnCount <= 0)
                             {
-                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Update", MaxEnumGroup.LogError, "Error updating {Count} data elements.  None updated.", loDataList.Count));
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Update", MaxEnumGroup.LogError, "Error updating {Count} data elements.  None updated for count {Count} using SQL {sql}", loDataList.Count, lsSql));
                                 lnR |= 4; //// Error deleting from database
                             }
                             else
@@ -671,7 +672,7 @@ namespace MaxFactry.Base.DataLayer.Library.Provider
                         }
                         catch (Exception loE)
                         {
-                            MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Update", MaxEnumGroup.LogError, "Exception updating {Count} data elements", loE, loDataList.Count));
+                            MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Update", MaxEnumGroup.LogError, "Exception updating {Count} data elements using SQL {sql}", loE, loDataList.Count, lsSql));
                             lnR |= 1; //// Exception updating
                         }
                         finally
@@ -734,13 +735,13 @@ namespace MaxFactry.Base.DataLayer.Library.Provider
                         int lnCount = MaxDbCommandLibrary.ExecuteNonQueryTransaction(this.DbCommandProviderName, this.DbCommandLibraryProviderType, loCommand);
                         if (lnCount <= 0)
                         {
-                            MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Delete", MaxEnumGroup.LogError, "Error deleting {Count} data elements.  None deleted.", loDataList.Count));
+                            MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Delete", MaxEnumGroup.LogError, "Error deleting {Count} data elements.  None deleted using SQL {sql}", loDataList.Count));
                             lnR |= 4; //// Error deleting from database
                         }
                     }
                     catch (Exception loE)
                     {
-                        MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Delete", MaxEnumGroup.LogError, "Exception deleting {Count} data elements", loE, loDataList.Count));
+                        MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Delete", MaxEnumGroup.LogError, "Exception deleting {Count} data elements using SQL {sql}", loE, loDataList.Count, lsSql));
                         lnR |= 1; //// Exception deleting
                     }
                     finally
