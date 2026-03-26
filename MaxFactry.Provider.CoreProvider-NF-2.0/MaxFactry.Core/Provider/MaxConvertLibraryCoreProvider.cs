@@ -36,6 +36,7 @@
 // <change date="11/8/2017" author="Brian A. Lakstins" description="Update to log serialization failures.">
 // <change date="3/4/2020" author="Brian A. Lakstins" description="Update to not depend in PublicKeyToken or Version when deserializing a type.">
 // <change date="4/30/2021" author="Brian A. Lakstins" description="Add parsing of unix timestamp.">
+// <change date="3/26/2026" author="Brian A. Lakstins" description="Handle getting type when assembly may have changed from one version of .net to another.">
 // </changelog>
 #endregion
 
@@ -134,6 +135,11 @@ namespace MaxFactry.Core.Provider
                                     }
 
                                     Type loType = Type.GetType(lsType);
+                                    if (null == loType && lsType.Contains(","))
+                                    {
+                                        loType = Type.GetType(lsType.Substring(0, lsType.IndexOf(",")));
+                                    }
+
                                     loValue = this.DeserializeObject(loValue.ToString(), loType);
                                     if (loValue is DateTime)
                                     {
