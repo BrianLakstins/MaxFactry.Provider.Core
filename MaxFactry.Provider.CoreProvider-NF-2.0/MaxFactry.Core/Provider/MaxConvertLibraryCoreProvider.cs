@@ -37,6 +37,7 @@
 // <change date="3/4/2020" author="Brian A. Lakstins" description="Update to not depend in PublicKeyToken or Version when deserializing a type.">
 // <change date="4/30/2021" author="Brian A. Lakstins" description="Add parsing of unix timestamp.">
 // <change date="3/26/2026" author="Brian A. Lakstins" description="Handle getting type when assembly may have changed from one version of .net to another.">
+// <change date="4/27/2026" author="Brian A. Lakstins" description="Update logging.  Use full library for recursive deserialization.">
 // </changelog>
 #endregion
 
@@ -101,7 +102,7 @@ namespace MaxFactry.Core.Provider
                 }
                 else
                 {
-                    loR = this.DeserializeFromJsonConditional(lsJson, typeof(System.Collections.Generic.Dictionary<string, object>));
+                    loR = MaxConvertLibrary.DeserializeObject(lsJson, typeof(System.Collections.Generic.Dictionary<string, object>));
                     if (null == loR)
                     {
                         loR = new MaxIndex();
@@ -159,7 +160,7 @@ namespace MaxFactry.Core.Provider
                                         }
                                         else if (laValue[lnV] is Newtonsoft.Json.Linq.JObject)
                                         {
-                                            MaxIndex loMaxIndex = this.DeserializeFromJsonConditional(lsJsonArray, typeof(MaxIndex)) as MaxIndex;
+                                            MaxIndex loMaxIndex = MaxConvertLibrary.DeserializeObject(lsJsonArray, typeof(MaxIndex)) as MaxIndex;
                                             laMaxIndex[lnV] = loMaxIndex;
                                         }
                                     }
@@ -173,7 +174,7 @@ namespace MaxFactry.Core.Provider
                                 else if (loValue is Newtonsoft.Json.Linq.JObject)
                                 {
                                     string lsJsonObject = Newtonsoft.Json.JsonConvert.SerializeObject(loValue);
-                                    MaxIndex loMaxIndex = this.DeserializeFromJsonConditional(lsJsonObject, typeof(MaxIndex)) as MaxIndex;
+                                    MaxIndex loMaxIndex = MaxConvertLibrary.DeserializeObject(lsJsonObject, typeof(MaxIndex)) as MaxIndex;
                                     loValue = loMaxIndex;
                                 }
 
@@ -199,7 +200,7 @@ namespace MaxFactry.Core.Provider
                 }
                 catch (Exception loE)
                 {
-                    MaxLogLibrary.Log(new MaxLogEntryStructure(MaxEnumGroup.LogError, "Error Deserializing Json to {Type}.  {Json}", loE, loExpectedType, lsJson));
+                    MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "DeserializeFromJsonConditional", MaxEnumGroup.LogError, "Error Deserializing Json to {Type}.  {Json}", loE, loExpectedType, lsJson));
                 }
             }
 
