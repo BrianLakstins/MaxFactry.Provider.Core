@@ -38,6 +38,7 @@
 // <change date="1/7/2020" author="Brian A. Lakstins" description="Check for DbNull before reading.  Update data conversion to catch any exception.">
 // <change date="2/24/2020" author="Brian A. Lakstins" description="Fix issue with ignoring values that are returned that don't match defined fields.">
 // <change date="3/31/2024" author="Brian A. Lakstins" description="Updated for changes to dependency classes">
+// <change date="6/24/2024" author="Brian A. Lakstins" description="Add more detailed logging of data reading exceptions.">
 // </changelog>
 #endregion
 
@@ -341,6 +342,11 @@ namespace MaxFactry.Provider.CoreProvider.DataLayer.Provider
 						loReader.Close();
 						loReader = null;
 					}
+				}
+				catch (Exception loEReader)
+				{
+					MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Fill", MaxEnumGroup.LogCritical, "Exception reading data using {CommandText}", loEReader, loCommand.CommandText));
+					throw new MaxException("Error reading data using " + loCommand.CommandText, loEReader);
 				}
 				finally
 				{
